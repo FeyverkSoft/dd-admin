@@ -1,0 +1,6 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Disallow: /api/swagger/
+Disallow: /admin/
+Sitemap: https://dobrodom.online/rss/pets
+Sitemap: https://dobrodom.online/Sitemap.xml

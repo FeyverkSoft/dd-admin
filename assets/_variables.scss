@@ -1,0 +1,132 @@
+$gray          : gray;
+$white         : white;
+$black         : black;
+$headerColor   : rgba(255, 255, 255, 1);
+$headerColor2  : rgba(255, 255, 255, 0.7);
+$headerColor3  : rgba(255, 255, 255, 0.8);
+$bgColor       : #f5f4f5;
+$footerColor   : #f6f6f6;
+$lightBgColor  : lighten($bgColor, 50%);
+$mainFontColor : #050505;
+$lightFontColor: #959595;
+$whiteFontColor: white;
+$spin          : 2;
+
+$successColor  : rgb(54, 193, 57);
+$importantColor: rgb(235, 60, 73);
+$defaultColor  : rgb(60, 73, 235);
+$errorColor    : rgb(251, 109, 41);
+
+$orange : rgb(255, 149, 11);
+$blue   : rgb(60, 73, 235);
+$violet : rgb(255, 15, 248);
+$orange2: rgb(255, 105, 0);
+
+$mainButonBgColor: $successColor;
+
+$loaderColor: $orange2;
+
+$linkColor: #0091AB;
+
+$hover   : 20%;
+$hover_10: 10%;
+
+// переменные высоты
+$height-100pr: 100%;
+$height-50pr : 50%;
+// переменные ширины
+$width-100pr : 100%;
+$width-50pr  : 50%;
+$width-33pr  : 100/3%;
+$width-66pr  : 100% * 2/3;
+
+//https://www.w3.org/Style/Examples/007/units.en.html
+//>>But for font sizes it is even better to use em.
+$_5px : 0.312rem; //10px 7.5pt
+$_10px: 0.625rem; //10px 7.5pt
+$_12px: 0.75rem; //12px 9pt
+$_14px: 0.875rem; //14px 10.5pt
+$_16px: 1rem; //16px 12pt
+$_19px: 1.2rem; //19px 14pt
+$_22px: 1.4rem; //22px 16pt
+$_24px: 1.5rem; //24px 18pt
+$_40px: 2.45rem; //40px
+//Названия шрифта
+$font-family: Roboto,
+Ubuntu,
+Lato,
+'Open Sans',
+sans-serif;
+//-----Тени material desing-----//
+$box-shadow-0: 0 2px 2px transparentize($black, .86),
+1px 2px 3px transparentize($black, .88);
+$box-shadow-1: 0 2px 4px transparentize($black, .824),
+0 2px 3px transparentize($black, .822);
+$box-shadow-2: 0 3px 6px transparentize($black, .64),
+0 3px 6px transparentize($black, .77);
+$box-shadow-3: 0 16px 24px 2px transparentize($black, .86),
+0 6px 30px 5px transparentize($black, .88),
+0 8px 10px -5px transparentize($black, .80);
+$box-shadow-0-inset: inset 0 2px 2px transparentize($black, .86),
+inset 1px 2px 3px transparentize($black, .88);
+$box-shadow-1-inset: inset 0 2px 4px transparentize($black, .76),
+inset 0 2px 3px transparentize($black, .78);
+//---Disp Size ---//
+$mobile-M     : 350px; //моё виденье размеров такое :D
+$mobile-L     : 576px; //576px; моё виденье размеров такое :D
+$tablet       : 816px;
+$laptop       : 1024px;
+$laptop-l     : 1200px;
+$menu-size    : 14rem;
+$mob-menu-size: $menu-size / 3;
+
+@mixin transition($s, $sec: 0.3s, $f: cubic-bezier(.4, 0, .2, 1)) {
+    -moz-transition-duration          : $sec;
+    -o-transition-duration            : $sec;
+    -webkit-transition-duration       : $sec;
+    transition-duration               : $sec;
+    -moz-transition-timing-function   : $f;
+    -o-transition-timing-function     : $f;
+    -webkit-transition-timing-function: $f;
+    transition-timing-function        : $f;
+    -moz-transition-property          : $s;
+    -o-transition-property            : $s;
+    -webkit-transition-property       : $s;
+    transition-property               : $s;
+}
+
+@mixin flex() {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+}
+
+@mixin timeout() {
+    -o-animation     : _fadein 0.1s linear 1 normal both;
+    -ms-animation    : _fadein 0.1s linear 1 normal both;
+    -webkit-animation: _fadein 0.1s linear 1 normal both;
+    -moz-animation   : _fadein 0.1s linear 1 normal both;
+    animation        : _fadein 0.1s linear 1 normal both;
+    will-change      : background-color, box-shadow, animation, opacity;
+}
+
+/*
+@mixin keyframes _fadein {
+    0% {
+        will-change: opacity;
+        opacity: 0;
+    }
+
+    66% {
+        will-change: opacity;
+        opacity: 0.5;
+    }
+
+    100% {
+        will-change: opacity;
+        opacity: 1;
+    }
+}
+*/
