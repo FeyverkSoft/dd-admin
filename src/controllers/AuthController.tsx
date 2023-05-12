@@ -25,7 +25,7 @@ export default class AuthController extends React.Component {
                 </Breadcrumb>
                 <div className={style['auth']}>
                     <Card
-                        title='Authorize form'
+                        title={<Trans>Auth.Form</Trans>}
                         style={{ width: '500px' }}
                     >
                         <Tabs defaultActiveKey="1">
