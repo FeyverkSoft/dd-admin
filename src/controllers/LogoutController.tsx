@@ -4,9 +4,9 @@ import { HomeOutlined } from '@ant-design/icons';
 import style from './auth.module.scss';
 import { Link } from 'react-router-dom';
 import { Trans } from 'react-i18next';
-import { LoginForm } from '../_components/LoginForm/LoginForm';
+import { LogAuthForm } from '../_components/LoginForm/LogAuthForm';
 
-export default class AuthController extends React.Component {
+export default class LogoutController extends React.Component {
     render() {
         return (
             <div>
@@ -17,8 +17,8 @@ export default class AuthController extends React.Component {
                         </Link>
                     </Breadcrumb.Item>
                     <Breadcrumb.Item>
-                        <Link to={"/auth"} >
-                            <Trans>Auth.Auth</Trans>
+                        <Link to={"/logout"} >
+                            <Trans>Auth.Logout</Trans>
                         </Link>
                     </Breadcrumb.Item>
                 </Breadcrumb>
@@ -27,11 +27,7 @@ export default class AuthController extends React.Component {
                         title={<Trans>Auth.Form</Trans>}
                         style={{ width: '500px' }}
                     >
-                        <Tabs defaultActiveKey="1">
-                            <Tabs.TabPane tab="Auth" key="1">
-                                <LoginForm />
-                            </Tabs.TabPane>
-                        </Tabs>
+                        <LogAuthForm />
                     </Card>
                 </div>
             </div>

@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { Route, Redirect, RouteProps, RouteComponentProps, LinkProps, NavLink, Link } from 'react-router-dom';
+import { Route, Redirect, RouteProps, RouteComponentProps, LinkProps, NavLink, Link, match } from 'react-router-dom';
 import * as History from 'history';
-import * as H from 'history';
 import { TokenStorage } from '../core/TokenStorage';
+import { connect } from 'react-redux';
+import { IStore } from './store';
 
 export const PrivateRoute = ({ component, ...rest }: RouteProps) => {
     if (!component) {
@@ -48,39 +49,50 @@ export const NotPrivateRoute = ({ component, ...rest }: RouteProps) => {
 interface ILinkProps extends LinkProps {
     isHidden?: Function
     activeClassName?: string;
-    isActive?<P>(match: match<P>, location: History.Location): boolean;
+    isActive?<P extends { [K in keyof P]?: string }>(match: match<P>, location: History.Location): boolean;
     location?: History.Location;
     [id: string]: any;
 }
 
-export const PrivateNavLink = ({ ...props }: ILinkProps): ReturnType<NavLink<H.LocationState>> =>
-    TokenStorage.isAuthenticated()
+const _PrivateNavLink = ({ ...props }: ILinkProps): ReturnType<NavLink<any>> =>
+    props.isAuth || TokenStorage.isAuthenticated()
         ? <NavLink  {...props} exact />
         : null;
-
-export class PrivateLink extends React.Component<ILinkProps>{
-    render() {
-        return (
-            TokenStorage.isAuthenticated()
-                ? <Link {...this.props} />
-                : null
-        )
+export const PrivateNavLink = connect(
+    (state: IStore) => {
+        return { isAuth: state.auth.isAuth }
     }
-}
+)(_PrivateNavLink)
 
-export const OnlyPublicNavLink = ({ ...props }: ILinkProps): ReturnType<NavLink<H.LocationState>> =>
-    TokenStorage.isAuthenticated()
+const _PrivateLink = ({ ...props }: ILinkProps): ReturnType<NavLink<any>> =>
+    props.isAuth || TokenStorage.isAuthenticated()
+        ? <Link  {...props} />
+        : null;
+export const PrivateLink = connect(
+    (state: IStore) => {
+        return { isAuth: state.auth.isAuth }
+    }
+)(_PrivateLink)
+
+const _OnlyPublicNavLink = ({ ...props }: ILinkProps): ReturnType<NavLink<any>> =>
+    props.isAuth || TokenStorage.isAuthenticated()
         ? null
         : <NavLink  {...props} exact />;
-
-export class OnlyPublicLink extends React.Component<ILinkProps>{
-    render() {
-        return (
-            TokenStorage.isAuthenticated()
-                ? null
-                : <Link {...this.props} />
-        )
+export const OnlyPublicNavLink = connect(
+    (state: IStore) => {
+        return { isAuth: state.auth.isAuth }
     }
-}
+)(_OnlyPublicNavLink)
 
+
+const _OnlyPublicLink = ({ ...props }: ILinkProps): ReturnType<NavLink<any>> =>
+    props.isAuth || TokenStorage.isAuthenticated()
+        ? null
+        : <Link  {...props} />;
+
+export const OnlyPublicLink = connect(
+    (state: IStore) => {
+        return { isAuth: state.auth.isAuth }
+    }
+)(_OnlyPublicLink)
 

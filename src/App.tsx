@@ -2,15 +2,16 @@ import React, { lazy, Suspense, useEffect, useState } from 'react';
 import { Router, Route, Switch, BrowserRouter, useLocation } from 'react-router-dom';
 import styles from './app.scss';
 import './core/Lang';
-import { NotPrivateRoute, OnlyPublicLink, OnlyPublicNavLink, TryCatch } from './_helpers';
+import { IStore, NotPrivateRoute, OnlyPublicLink, OnlyPublicNavLink, PrivateNavLink, PrivateRoute, TryCatch } from './_helpers';
 import { Button, Layout, Menu, MenuProps, MenuTheme, Spin, theme } from 'antd';
 import {
+    LogoutOutlined,
     LoginOutlined,
     MenuUnfoldOutlined,
     MenuFoldOutlined,
 } from '@ant-design/icons';
-import i18next from 'i18next';
 import { Trans } from 'react-i18next';
+import { connect } from 'react-redux';
 
 const { Header, Content, Sider } = Layout;
 type MenuItem = Required<MenuProps>['items'][number];
@@ -26,6 +27,7 @@ const load = (Component: Function) => (props: any) => (
 
 const NotFoundController = load(lazy(() => import("./controllers/NotFoundController")));
 const AuthController = load(lazy(() => import("./controllers/AuthController")));
+const LogoutController = load(lazy(() => import("./controllers/LogoutController")));
 
 const getItem = (
     label: React.ReactNode,
@@ -43,14 +45,20 @@ const getItem = (
     } as MenuItem;
 }
 
-const items: MenuItem[] = [
+const onlyPublicItems: MenuItem[] = [
     getItem(<OnlyPublicNavLink to="/auth">
         <Trans>Auth.Auth</Trans>
     </OnlyPublicNavLink>, '/auth', <LoginOutlined />),
 ];
 
+const privateItems: MenuItem[] = [
+    getItem(<PrivateNavLink to="/logout">
+        <Trans>Auth.Logout</Trans>
+    </PrivateNavLink>, '/logout', <LogoutOutlined />),
+];
 
-export const MyApp = () => {
+
+const _MyApp = (props: { isAuth: boolean }) => {
     const location = useLocation()
     const [collapsed, setCollapsed] = useState(false);
     const [mtheme, setTheme] = useState<MenuTheme>('dark');
@@ -58,11 +66,19 @@ export const MyApp = () => {
         token: { colorBgContainer },
     } = theme.useToken();
 
+    let items: MenuItem[] = [];
+    if (props.isAuth) {
+        items.push(...privateItems);
+    } else {
+        items.push(...onlyPublicItems);
+    }
+
+
     const [selectedKey, setSelectedKey] = useState(items.find(_item => location.pathname.startsWith(_item.key))?.key)
 
     useEffect(() => {
         setSelectedKey(items.find(_item => location.pathname.startsWith(_item.key))?.key)
-    }, [location])
+    }, [items, location])
 
     return <div className={`flex-vertical ${styles['app']}`} style={{ width: '100%' }}>
         <div className={"body"}>
@@ -86,6 +102,7 @@ export const MyApp = () => {
                     <TryCatch>
                         <Switch>
                             <NotPrivateRoute path='/auth' component={AuthController} />
+                            <PrivateRoute path='/logout' component={LogoutController} />
                             <Route component={NotFoundController} />
                         </Switch>
                     </TryCatch>
@@ -94,3 +111,9 @@ export const MyApp = () => {
         </div>
     </div>
 }
+
+export const MyApp = connect(
+    (state: IStore) => {
+        return { isAuth: state.auth.isAuth }
+    }
+)(_MyApp)

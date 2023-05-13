@@ -2,6 +2,8 @@ import { AxiosRequestConfig } from "axios";
 import axios from 'axios';
 import { IJwtBody } from "../_services/auth/JwtBody";
 import { Config } from ".";
+import { store } from "../_helpers";
+import { authClear, authCreate } from "../_reducers/auth/auth.reducer";
 
 export class TokenStorage {
 
@@ -40,6 +42,7 @@ export class TokenStorage {
 
   public static storeToken(token: string): void {
     localStorage.setItem(TokenStorage.LOCAL_STORAGE_TOKEN, token);
+    store.dispatch(authCreate());
   }
 
   public static storeRefreshToken(refreshToken: string): void {
@@ -49,6 +52,7 @@ export class TokenStorage {
   public static clear(): void {
     localStorage.removeItem(TokenStorage.LOCAL_STORAGE_TOKEN);
     localStorage.removeItem(TokenStorage.LOCAL_STORAGE_REFRESH_TOKEN);
+    store.dispatch(authClear());
   }
 
   private static getRefreshToken(): string | null {
