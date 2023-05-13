@@ -3,6 +3,7 @@
   "version": "1.0.06",
   "description": "Добродом admin",
   "main": "app.jsx",
+  "homepage": "/admin/",
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.5",
