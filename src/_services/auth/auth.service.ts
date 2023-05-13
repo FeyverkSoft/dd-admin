@@ -24,7 +24,7 @@ export class authService {
             .then(async _ => {
                 TokenStorage.storeRefreshToken(_.data.refresh_token);
                 TokenStorage.storeToken(_.data.access_token);
-                history.push('/');
+                history.push('/admin');
             }).catch(async (ex) => {
                 await store.dispatch(createErrorAlert(new Alert(ex.messages, "error")));
             });
@@ -32,6 +32,6 @@ export class authService {
 
     static async logOut(): Promise<any> {
         TokenStorage.clear();
-        history.push('/');
+        history.push('/admin');
     };
 }

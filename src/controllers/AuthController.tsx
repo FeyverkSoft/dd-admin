@@ -12,12 +12,12 @@ export default class AuthController extends React.Component {
             <div>
                 <Breadcrumb className={style['bc']}>
                     <Breadcrumb.Item>
-                        <Link to={"/"} >
+                        <Link to={"/admin/"} >
                             <HomeOutlined />
                         </Link>
                     </Breadcrumb.Item>
                     <Breadcrumb.Item>
-                        <Link to={"/auth"} >
+                        <Link to={"/admin/auth"} >
                             <Trans>Auth.Auth</Trans>
                         </Link>
                     </Breadcrumb.Item>

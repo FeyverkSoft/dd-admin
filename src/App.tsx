@@ -46,15 +46,15 @@ const getItem = (
 }
 
 const onlyPublicItems: MenuItem[] = [
-    getItem(<OnlyPublicNavLink to="/auth">
+    getItem(<OnlyPublicNavLink to="/admin/auth">
         <Trans>Auth.Auth</Trans>
-    </OnlyPublicNavLink>, '/auth', <LoginOutlined />),
+    </OnlyPublicNavLink>, '/admin/auth', <LoginOutlined />),
 ];
 
 const privateItems: MenuItem[] = [
-    getItem(<PrivateNavLink to="/logout">
+    getItem(<PrivateNavLink to="/admin/logout">
         <Trans>Auth.Logout</Trans>
-    </PrivateNavLink>, '/logout', <LogoutOutlined />),
+    </PrivateNavLink>, '/admin/logout', <LogoutOutlined />),
 ];
 
 
@@ -74,10 +74,10 @@ const _MyApp = (props: { isAuth: boolean }) => {
     }
 
 
-    const [selectedKey, setSelectedKey] = useState(items.find(_item => location.pathname.startsWith(_item.key))?.key)
+    const [selectedKey, setSelectedKey] = useState(items.find(_item => location.pathname.startsWith(_item?.key?.toString()))?.key?.toString())
 
     useEffect(() => {
-        setSelectedKey(items.find(_item => location.pathname.startsWith(_item.key))?.key)
+        setSelectedKey(items.find(_item => location.pathname.startsWith(_item?.key?.toString()))?.key?.toString())
     }, [items, location])
 
     return <div className={`flex-vertical ${styles['app']}`} style={{ width: '100%' }}>
@@ -101,8 +101,8 @@ const _MyApp = (props: { isAuth: boolean }) => {
                     </Header>
                     <TryCatch>
                         <Switch>
-                            <NotPrivateRoute path='/auth' component={AuthController} />
-                            <PrivateRoute path='/logout' component={LogoutController} />
+                            <NotPrivateRoute path='/admin/auth' component={AuthController} />
+                            <PrivateRoute path='/admin/logout' component={LogoutController} />
                             <Route component={NotFoundController} />
                         </Switch>
                     </TryCatch>

@@ -12,12 +12,12 @@ export default class LogoutController extends React.Component {
             <div>
                 <Breadcrumb className={style['bc']}>
                     <Breadcrumb.Item>
-                        <Link to={"/"} >
+                        <Link to={"/admin/"} >
                             <HomeOutlined />
                         </Link>
                     </Breadcrumb.Item>
                     <Breadcrumb.Item>
-                        <Link to={"/logout"} >
+                        <Link to={"/admin/logout"} >
                             <Trans>Auth.Logout</Trans>
                         </Link>
                     </Breadcrumb.Item>

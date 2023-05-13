@@ -1,0 +1,5 @@
+Пре деплое в файде index.html меняем 
+"admin/static/js/" на "admin/static/js/"
+/static/media/ на /admin/static/media/
+/fonts/fonts/ на /admin/fonts/fonts/
+static/css/ на /admin/static/css/
