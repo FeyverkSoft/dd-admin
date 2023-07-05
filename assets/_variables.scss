@@ -1,3 +1,5 @@
+@use "sass:math";
+
 $gray          : gray;
 $white         : white;
 $black         : black;
@@ -37,8 +39,8 @@ $height-50pr : 50%;
 // переменные ширины
 $width-100pr : 100%;
 $width-50pr  : 50%;
-$width-33pr  : 100/3%;
-$width-66pr  : 100% * 2/3;
+$width-33pr  : math.div(100, 3%);
+$width-66pr  : calc(100% * 2/3);
 
 //https://www.w3.org/Style/Examples/007/units.en.html
 //>>But for font sizes it is even better to use em.
@@ -78,7 +80,7 @@ $tablet       : 816px;
 $laptop       : 1024px;
 $laptop-l     : 1200px;
 $menu-size    : 14rem;
-$mob-menu-size: $menu-size / 3;
+$mob-menu-size: math.div($menu-size, 3);
 
 @mixin transition($s, $sec: 0.3s, $f: cubic-bezier(.4, 0, .2, 1)) {
     -moz-transition-duration          : $sec;

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Alert } from '../../_services/entity';
-import { AlertState } from './AlertState';
+import { AlertState } from './';
 
 const count = 5;//количество отображаемых сообщений
 

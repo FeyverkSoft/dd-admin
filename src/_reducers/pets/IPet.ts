@@ -1,0 +1,20 @@
+import { BaseSearchResult } from "../BaseSearchResult";
+
+export const PetStates = [ 'alive', 'death', 'adopted', 'critical', 'wanted', 'ourpets' ];
+export type PetState = typeof PetStates[number];
+
+export const PetGenders = [ 'unset', 'female', 'male' ];
+export type PetGender = typeof PetGenders[number];
+
+export interface IPet {
+    id: string;
+    name: string;
+    before?: string;
+    after?: string;
+    mdBody: string;
+    mdShortBody: string;
+    state: PetState;
+    type: string;
+}
+
+export interface PetSearchResult extends BaseSearchResult<IPet> {}
