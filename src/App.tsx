@@ -4,6 +4,7 @@ import styles from './app.scss';
 import './core/Lang';
 import { IStore, NotPrivateRoute, OnlyPublicLink, OnlyPublicNavLink, PrivateNavLink, PrivateRoute, TryCatch } from './_helpers';
 import { Button, Layout, Menu, MenuProps, MenuTheme, Spin, theme } from 'antd';
+
 import {
     LogoutOutlined,
     LoginOutlined,
@@ -89,7 +90,7 @@ const _MyApp = (props: { isAuth: boolean }) => {
     return <div className={`flex-vertical ${styles['app']}`} style={{ width: '100%' }}>
         <div className={"body"}>
             <Layout style={{ minHeight: '100vh' }}>
-                <Sider trigger={null} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
+                <Sider trigger={null} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)} mo>
                     <Menu theme={mtheme} selectedKeys={[selectedKey]} mode="inline" items={items} />
                 </Sider>
                 <Layout className="site-layout">
