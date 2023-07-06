@@ -47,6 +47,12 @@ export class _PetsController extends React.Component<Props> {
         this.updateHash(page);
     };
 
+    onSearch = (value: string, event?: any) => {
+        if (this.props.q != value) {
+            this.updateHash(this.props.offset / (this.props.limit ?? 1) + 1, this.props.petStatuses, this.props.genders, value);
+        }
+    };
+
     updateHash = (page: number,
         petStatuses?: PetState[] | undefined,
         genders?: PetGender[] | undefined,
@@ -86,15 +92,15 @@ export class _PetsController extends React.Component<Props> {
                 <div className={style["pets"]}>
                     <Row gutter={[16, 16]}>
                         <Col xs={19} sm={19} md={21} lg={22} xl={23}>
-                            {/* <Search
-                                    placeholder="введите текст для поиска"
-                                    enterButton='search'
-                                    onSearch={this.onSearch}
-                                />*/}
+                            {<Search
+                                placeholder="введите текст для поиска"
+                                enterButton='search'
+                                onSearch={this.onSearch}
+                            />}
                         </Col>
                         <Col xs={5} sm={5} md={3} lg={2} xl={1}>
                             {/* <Button
-                                    onClick={this.toggleAddStudentModal}
+                                    onClick={this.toggleAddPetsModal}
                                 >
                                     Add
                             </Button>*/}
