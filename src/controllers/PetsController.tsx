@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import style from './pets.module.scss';
 import { Trans, useTranslation } from 'react-i18next';
 import { HomeOutlined } from '@ant-design/icons';
 import { RouteComponentProps } from 'react-router';
@@ -10,6 +11,7 @@ import { fetchPets, pets } from '../_reducers/pets';
 import { Breadcrumb, Row, Col, Button, Tooltip, Table } from 'antd';
 import { Link } from 'react-router-dom';
 import Search from 'antd/lib/input/Search';
+import i18n from '../core/Lang';
 
 
 interface Props extends RouteComponentProps<any> {
@@ -38,7 +40,7 @@ export class _PetsController extends React.Component<Props> {
     render() {
         return (
             <div>
-                <Breadcrumb>
+                <Breadcrumb className={style["bc"]}>
                     <Breadcrumb.Item>
                         <Link to={"/admin/"} >
                             <HomeOutlined />
@@ -50,7 +52,7 @@ export class _PetsController extends React.Component<Props> {
                         </Link>
                     </Breadcrumb.Item>
                 </Breadcrumb>
-                <div>
+                <div className={style["pets"]}>
                         <Row gutter={[16, 16]}>
                             <Col xs={19} sm={19} md={21} lg={22} xl={23}>
                                {/* <Search
@@ -74,19 +76,24 @@ export class _PetsController extends React.Component<Props> {
                                     rowKey="id"
                                     columns={[
                                         {
-                                            title: 'Name',
+                                            title: i18n.t('Pets.Name'),
                                             dataIndex: 'name',
                                             key: 'name',
                                         },
                                         {
-                                            title: 'State',
+                                            title: i18n.t('Pets.State'),
                                             dataIndex: 'petState',
                                             key: 'petState',
                                         },
                                         {
-                                            title: 'Type',
+                                            title: i18n.t('Pets.Type'),
                                             dataIndex: 'type',
                                             key: 'type',
+                                        },
+                                        {
+                                            title: i18n.t('Pets.Gender'),
+                                            dataIndex: 'gender',
+                                            key: 'gender',
                                         },
                                     ]}
                                     pagination={{
