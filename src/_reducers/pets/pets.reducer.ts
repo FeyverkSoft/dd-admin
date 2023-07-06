@@ -6,20 +6,21 @@ import { PetGender, PetSearchResult, PetState } from './IPet';
 
 const count = 15;//количество отображаемых сообщений петов по дефолту
 
-const fetchPets = createAsyncThunk(
+export const fetchPets = createAsyncThunk(
     'pets/fetch',
     async (params: {
         organisationId: string,
         limit: number,
         offset: number,
-        petStatuses: Array<PetState> | undefined,
-        petGenders?: Array<PetGender> | undefined
+        petStatuses?: Array<PetState> | undefined,
+        petGenders?: Array<PetGender> | undefined,
+        text?: string,
     }, { signal }) => {
         const source = axios.CancelToken.source()
         signal.addEventListener('abort', () => {
             source.cancel()
         })
-        const response = await axios.get<BaseResponse & PetSearchResult>(Config.BuildUrl("/api/pets"),
+        const response = await axios.get<BaseResponse & PetSearchResult>(Config.BuildUrl("/pets"),
             {
                 params: {
                     organisationId: params.organisationId,
@@ -27,6 +28,7 @@ const fetchPets = createAsyncThunk(
                     offset: params.offset ?? 0,
                     petStatuses: params.petStatuses,
                     genders: params.petGenders,
+                    text: params.text,
                 },
                 cancelToken: source.token,
             })
@@ -34,6 +36,7 @@ const fetchPets = createAsyncThunk(
     }
 )
 const initialState: PetSearchResult = {
+    isLoading: false,
     total: 0,
     limit: count,
     offset: 0,
@@ -46,9 +49,16 @@ const { actions, reducer } = createSlice({
         // standard reducer logic, with auto-generated action types per reducer
     },
     extraReducers: (builder) => {
-        builder.addCase(fetchPets.fulfilled, (state, action) => {
-            state = action.payload
-        })
+        builder
+            .addCase(fetchPets.pending, (state, action) => {
+                state.isLoading = true;
+                return state;
+            })
+            .addCase(fetchPets.fulfilled, (state, action) => {
+                state = action.payload;
+                state.isLoading = false;
+                return state;
+            })
     },
 })
 

@@ -9,6 +9,7 @@ import {
     LoginOutlined,
     MenuUnfoldOutlined,
     MenuFoldOutlined,
+    QqOutlined,
 } from '@ant-design/icons';
 import { Trans } from 'react-i18next';
 import { connect } from 'react-redux';
@@ -28,6 +29,7 @@ const load = (Component: Function) => (props: any) => (
 const NotFoundController = load(lazy(() => import("./controllers/NotFoundController")));
 const AuthController = load(lazy(() => import("./controllers/AuthController")));
 const LogoutController = load(lazy(() => import("./controllers/LogoutController")));
+const PetsController = load(lazy(() => import("./controllers/PetsController")));
 
 const getItem = (
     label: React.ReactNode,
@@ -55,6 +57,10 @@ const privateItems: MenuItem[] = [
     getItem(<PrivateNavLink to="/admin/logout">
         <Trans>Auth.Logout</Trans>
     </PrivateNavLink>, '/admin/logout', <LogoutOutlined />),
+    
+    getItem(<PrivateNavLink to="/admin/pets">
+        <Trans>Pets.Pets</Trans>
+    </PrivateNavLink>, '/admin/pets', <QqOutlined />),
 ];
 
 
@@ -103,6 +109,7 @@ const _MyApp = (props: { isAuth: boolean }) => {
                         <Switch>
                             <NotPrivateRoute path='/admin/auth' component={AuthController} />
                             <PrivateRoute path='/admin/logout' component={LogoutController} />
+                            <PrivateRoute path='/admin/pets' component={PetsController} />
                             <Route component={NotFoundController} />
                         </Switch>
                     </TryCatch>

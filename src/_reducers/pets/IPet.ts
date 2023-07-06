@@ -13,7 +13,8 @@ export interface IPet {
     after?: string;
     mdBody: string;
     mdShortBody: string;
-    state: PetState;
+    petState: PetState;
+    gender: string;
     type: string;
 }
 
