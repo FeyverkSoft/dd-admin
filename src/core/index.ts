@@ -3,3 +3,4 @@ export * from './ObjCore';
 export * from './Dictionary';
 export * from './IHolded';
 export * from './IAction';
+export * from './jwt';

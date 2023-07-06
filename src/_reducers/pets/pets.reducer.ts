@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios'
-import { Config } from '../../core';
+import { api, Config } from '../../core';
 import { BaseResponse } from '../../_services/entity';
 import { PetGender, PetSearchResult, PetState } from './IPet';
 
@@ -20,7 +20,7 @@ export const fetchPets = createAsyncThunk(
         signal.addEventListener('abort', () => {
             source.cancel()
         })
-        const response = await axios.get<BaseResponse & PetSearchResult>(Config.BuildUrl("/pets"),
+        const response = await api.get<BaseResponse & PetSearchResult>(Config.BuildUrl("/pets"),
             {
                 params: {
                     organisationId: params.organisationId,
