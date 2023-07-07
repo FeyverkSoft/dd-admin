@@ -38,14 +38,14 @@ export const EditableSelect = ({ ...props }: EditableSelectProps) => {
                             toggleEdited(false);
                             props.onSave(selectedValue);
                         }}
-                        icon={<SaveFilled />}
+                        icon={<SaveFilled rev={'span'}/>}
                     />
                 </Tooltip>
             <Tooltip title={i18n.t('CANCEL')}>
                 <Button
                     type='link'
                     onClick={() => toggleEdited(false)}
-                    icon={<CloseOutlined />} 
+                    icon={<CloseOutlined rev={'span'}/>} 
                 />
             </Tooltip>
         </IF>

@@ -51,17 +51,17 @@ const getItem = (
 const onlyPublicItems: MenuItem[] = [
     getItem(<OnlyPublicNavLink to="/admin/auth">
         <Trans>Auth.Auth</Trans>
-    </OnlyPublicNavLink>, '/admin/auth', <LoginOutlined />),
+    </OnlyPublicNavLink>, '/admin/auth', <LoginOutlined rev={'span'}/>),
 ];
 
 const privateItems: MenuItem[] = [
     getItem(<PrivateNavLink to="/admin/logout">
         <Trans>Auth.Logout</Trans>
-    </PrivateNavLink>, '/admin/logout', <LogoutOutlined />),
+    </PrivateNavLink>, '/admin/logout', <LogoutOutlined rev={'span'}/>),
     
     getItem(<PrivateNavLink to="/admin/pets">
         <Trans>Pets.Pets</Trans>
-    </PrivateNavLink>, '/admin/pets', <QqOutlined />),
+    </PrivateNavLink>, '/admin/pets', <QqOutlined rev={'span'}/>),
 ];
 
 
@@ -90,14 +90,14 @@ const _MyApp = (props: { isAuth: boolean }) => {
     return <div className={`flex-vertical ${styles['app']}`} style={{ width: '100%' }}>
         <div className={"body"}>
             <Layout style={{ minHeight: '100vh' }}>
-                <Sider trigger={null} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)} mo>
+                <Sider trigger={null} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
                     <Menu theme={mtheme} selectedKeys={[selectedKey]} mode="inline" items={items} />
                 </Sider>
                 <Layout className="site-layout">
                     <Header style={{ padding: 0, background: colorBgContainer }}>
                         <Button
                             type="text"
-                            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                            icon={collapsed ? <MenuUnfoldOutlined rev={'span'}/> : <MenuFoldOutlined rev={'span'}/>}
                             onClick={() => setCollapsed(!collapsed)}
                             style={{
                                 fontSize: '16px',

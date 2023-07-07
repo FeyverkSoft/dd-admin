@@ -32,7 +32,7 @@ class _LoginForm extends React.Component<UserFormProps, any> {
                     ]}
                 >
                     <Input
-                        prefix={<UserOutlined />}
+                        prefix={<UserOutlined rev={'span'}/>}
                         placeholder={i18next.t("Auth.Username")}
                     />
                 </Form.Item>
@@ -46,7 +46,7 @@ class _LoginForm extends React.Component<UserFormProps, any> {
                 >
 
                     <Input
-                        prefix={<LockOutlined />}
+                        prefix={<LockOutlined rev={'span'}/>}
                         type="password"
                         placeholder={i18next.t("Auth.Password")}
                     />
