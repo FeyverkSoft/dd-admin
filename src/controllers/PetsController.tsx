@@ -8,7 +8,8 @@ import { hasVal } from '../core/ObjCore';
 import { IStore } from '../_helpers';
 import { IPet, PetGender, PetGenders, PetState, PetStates, PetTypes } from '../_reducers/pets/IPet';
 import { fetchPets, pets } from '../_reducers/pets';
-import { Breadcrumb, Row, Col, Button, Tooltip, Table } from 'antd';
+import { Breadcrumb, Row, Col, Button, Tooltip, Table, Select, Space } from 'antd';
+import type { SelectProps } from 'antd';
 import { Link } from 'react-router-dom';
 import Search from 'antd/lib/input/Search';
 import i18n from '../core/Lang';
@@ -32,15 +33,7 @@ interface Props extends RouteComponentProps<any> {
 export class _PetsController extends React.Component<Props> {
 
     componentDidMount() {
-        this.props.loadData(this.props.limit, this.props.offset, this.props.q, this.props.petStatuses, this.props.genders);
-    }
-
-    componentDidUpdate(prevProps: Props) {
-        if (prevProps.q != this.props.q ||
-            prevProps.limit != this.props.limit ||
-            prevProps.offset != this.props.offset) {
-            this.props.loadData(this.props.limit, this.props.offset, this.props.q, this.props.petStatuses, this.props.genders);
-        }
+        this.props.loadData(this.props.limit, this.props.offset, this.props.q, this.props.petStatuses || DEFAULT_S_FILTERS, this.props.genders || PetGenders);
     }
 
     paginationOnChange = (page: number, pageSize: number) => {
@@ -49,7 +42,7 @@ export class _PetsController extends React.Component<Props> {
 
     onSearch = (value: string, event?: any) => {
         if (this.props.q != value) {
-            this.updateHash(this.props.offset / (this.props.limit ?? 1) + 1, this.props.petStatuses, this.props.genders, value);
+            this.updateHash(1, this.props.petStatuses, this.props.genders, value);
         }
     };
 
@@ -80,7 +73,7 @@ export class _PetsController extends React.Component<Props> {
                 <Breadcrumb className={style["bc"]}>
                     <Breadcrumb.Item>
                         <Link to={"/admin/"} >
-                            <HomeOutlined rev={'span'}/>
+                            <HomeOutlined rev={'span'} />
                         </Link>
                     </Breadcrumb.Item>
                     <Breadcrumb.Item>
@@ -90,24 +83,64 @@ export class _PetsController extends React.Component<Props> {
                     </Breadcrumb.Item>
                 </Breadcrumb>
                 <div className={style["pets"]}>
-                    <Row gutter={[16, 16]}>
-                        <Col xs={19} sm={19} md={21} lg={22} xl={23}>
+                    <Row gutter={[25, 25]}>
+                        <Col xs={15} sm={15} md={12} lg={12} xl={8}>
                             {<Search
                                 placeholder="введите текст для поиска"
                                 enterButton='search'
                                 onSearch={this.onSearch}
                             />}
                         </Col>
-                        <Col xs={5} sm={5} md={3} lg={2} xl={1}>
-                            {/* <Button
-                                    onClick={this.toggleAddPetsModal}
+                        <Col xs={10} sm={9} md={6} lg={5} xl={5}>
+                            <Select
+                                mode="multiple"
+                                style={{ width: '100%' }}
+                                allowClear
+                                placeholder={i18n.t('Pets.State')}
+                                defaultValue={DEFAULT_S_FILTERS}
+                                //onChange={handleChange}
+                                options={PetStates.map((_) => {
+                                    return { value: _, label: i18n.t(`PetStates.${_.toLowerCase()}`) }
+                                })}
+                            />
+                        </Col>
+                        <Col xs={10} sm={9} md={6} lg={5} xl={5}>
+                            <Select
+                                mode="multiple"
+                                style={{ width: '100%' }}
+                                allowClear
+                                placeholder={i18n.t('Pets.Gender')}
+                                defaultValue={PetGenders}
+                                //onChange={handleChange}
+                                options={PetGenders.map((_) => {
+                                    return { value: _, label: i18n.t(`PetGenders.${_.toLowerCase()}`) }
+                                })}
+                            />
+                        </Col>
+                        <Col xs={10} sm={9} md={6} lg={5} xl={4}>
+                            <Select
+                                mode="multiple"
+                                style={{ width: '100%' }}
+                                allowClear
+                                placeholder={i18n.t('Pets.Type')}
+                                defaultValue={PetTypes}
+                                //onChange={handleChange}
+                                options={PetTypes.map((_) => {
+                                    return { value: _, label: i18n.t(`PetTypes.${_.toLowerCase()}`) }
+                                })}
+                            />
+                        </Col>
+                        <Col xs={4} sm={3} md={2} lg={2} xl={1}>
+                            { <Button
+                                 type='primary'
+                                   // onClick={this.toggleAddPetsModal}
                                 >
-                                    Add
-                            </Button>*/}
+                                    <Trans>Pets.Add</Trans>
+                            </Button>}
                         </Col>
                     </Row>
-                    <Row gutter={[16, 16]}>
-                        <Col xl={24}>
+                    <Row gutter={[1, 1]}>
+                        <Col  xs={24} sm={24} md={24} lg={24} xl={24}>
                             {<Table
                                 size='middle'
                                 rowKey="id"
@@ -208,15 +241,14 @@ export class _PetsController extends React.Component<Props> {
 
 
 const PetsController = connect((state: IStore, props: Props) => {
-    const { total, items } = state.pets;
+    const { total, items, isLoading } = state.pets;
 
     const limit = Number(props.match.params.limit || hasVal('limit') || 15);
     const offset = Number(props.match.params.offset || hasVal('offset') || 0);
     const query = props.match.params.q || hasVal('q') || "";
 
     return {
-        img: "./img/varia.jpg",
-        //isLoading: isLoading,
+        isLoading: isLoading,
         limit: limit,
         offset: offset,
         total: total ?? 0,

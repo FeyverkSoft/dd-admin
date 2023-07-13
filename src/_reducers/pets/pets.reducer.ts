@@ -20,7 +20,7 @@ export const fetchPets = createAsyncThunk(
         signal.addEventListener('abort', () => {
             source.cancel()
         })
-        const response = await api.get<BaseResponse & PetSearchResult>(Config.BuildUrl("/pets"),
+        const response = await api.get<BaseResponse & PetSearchResult>(Config.BuildUrl("/admin/pets"),
             {
                 params: {
                     organisationId: params.organisationId,
@@ -29,6 +29,9 @@ export const fetchPets = createAsyncThunk(
                     petStatuses: params.petStatuses,
                     genders: params.petGenders,
                     text: params.text,
+                },
+                paramsSerializer: {
+                    indexes: true,
                 },
                 cancelToken: source.token,
             })
