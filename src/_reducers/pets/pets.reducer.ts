@@ -2,7 +2,7 @@ import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios'
 import { api, Config } from '../../core';
 import { BaseResponse } from '../../_services/entity';
-import { PetGender, PetSearchResult, PetState, PetType } from './IPet';
+import { IPet, PetGender, PetSearchResult, PetState, PetType } from './IPet';
 
 const count = 15;//количество отображаемых сообщений петов по дефолту
 
@@ -40,6 +40,73 @@ export const fetchPets = createAsyncThunk(
         return response.data
     }
 )
+
+export const changeStatus = createAsyncThunk(
+    'pets/update/status',
+    async (params: {
+        id: string,
+        value: PetState
+    }, { signal }) => {
+        const source = axios.CancelToken.source()
+        signal.addEventListener('abort', () => {
+            source.cancel()
+        })
+        const response = await api.patch<BaseResponse & IPet>(Config.BuildUrl(`/admin/pets/${params.id}/state`),
+            {
+                state: params.value,
+            },
+            {
+
+                cancelToken: source.token,
+            })
+        return response.data
+    }
+)
+
+export const changeGender = createAsyncThunk(
+    'pets/update/gender',
+    async (params: {
+        id: string,
+        value: PetGender
+    }, { signal }) => {
+        const source = axios.CancelToken.source()
+        signal.addEventListener('abort', () => {
+            source.cancel()
+        })
+        const response = await api.patch<BaseResponse & IPet>(Config.BuildUrl(`/admin/pets/${params.id}/gender`),
+            {
+                gender: params.value,
+            },
+            {
+                cancelToken: source.token,
+            },
+        )
+        return response.data
+    }
+)
+
+export const changeType = createAsyncThunk(
+    'pets/update/type',
+    async (params: {
+        id: string,
+        value: PetType
+    }, { signal }) => {
+        const source = axios.CancelToken.source()
+        signal.addEventListener('abort', () => {
+            source.cancel()
+        })
+        const response = await api.patch<BaseResponse & IPet>(Config.BuildUrl(`/admin/pets/${params.id}/type`),
+            {
+                type: params.value,
+            },
+            {
+
+                cancelToken: source.token,
+            })
+        return response.data
+    }
+)
+
 const initialState: PetSearchResult = {
     isLoading: false,
     total: 0,
@@ -61,6 +128,36 @@ const { actions, reducer } = createSlice({
             })
             .addCase(fetchPets.fulfilled, (state, action) => {
                 state = action.payload;
+                state.isLoading = false;
+                return state;
+            })
+
+            .addCase(changeStatus.pending, (state, action) => {
+                state.isLoading = true;
+                return state;
+            })
+            .addCase(changeStatus.fulfilled, (state, action) => {
+                state.items.filter(_ => _.id === action.payload.id)[0].petState = action.payload.petState;
+                state.isLoading = false;
+                return state;
+            })
+
+            .addCase(changeType.pending, (state, action) => {
+                state.isLoading = true;
+                return state;
+            })
+            .addCase(changeType.fulfilled, (state, action) => {
+                state.items.filter(_ => _.id === action.payload.id)[0].type = action.payload.type;
+                state.isLoading = false;
+                return state;
+            })
+
+            .addCase(changeGender.pending, (state, action) => {
+                state.isLoading = true;
+                return state;
+            })
+            .addCase(changeGender.fulfilled, (state, action) => {
+                state.items.filter(_ => _.id === action.payload.id)[0].gender = action.payload.gender;
                 state.isLoading = false;
                 return state;
             })

@@ -7,7 +7,7 @@ import { RouteComponentProps } from 'react-router';
 import { hasVal } from '../core/ObjCore';
 import { IStore } from '../_helpers';
 import { IPet, PetGender, PetGenders, PetState, PetStates, PetType, PetTypes } from '../_reducers/pets/IPet';
-import { fetchPets, pets } from '../_reducers/pets';
+import { fetchPets, changeStatus, changeGender, changeType } from '../_reducers/pets';
 import { Breadcrumb, Row, Col, Button, Tooltip, Table, Select, Space } from 'antd';
 import type { SelectProps } from 'antd';
 import { Link } from 'react-router-dom';
@@ -30,6 +30,9 @@ interface Props extends RouteComponentProps<any> {
     total: number;
     result: IPet[],
     loadData(limit: number, offset: number, q: string, petStatuses: Array<PetState>, genders: Array<PetGender>, types: Array<PetType>): void;
+    changeStatus(id: string, value: PetState): void;
+    changeGender(id: string, value: PetGender): void;
+    changeType(id: string, value: PetType): void;
 }
 export class _PetsController extends React.Component<Props> {
     componentDidMount() {
@@ -47,7 +50,7 @@ export class _PetsController extends React.Component<Props> {
         this.updateHash(page);
     };
 
-    handleStatusesChange = (value: string[]) => {
+    filterHandleStatusesChange = (value: string[]) => {
         this.updateHash(
             (this.props.offset / this.props.limit) + 1,
             value || DEFAULT_S_FILTERS,
@@ -56,7 +59,7 @@ export class _PetsController extends React.Component<Props> {
             this.props.q,
         );
     }
-    handleTypesChange = (value: string[]) => {
+    filterHandleTypesChange = (value: string[]) => {
         this.updateHash(
             (this.props.offset / this.props.limit) + 1,
             this.props.petStatuses || DEFAULT_S_FILTERS,
@@ -65,7 +68,7 @@ export class _PetsController extends React.Component<Props> {
             this.props.q,
         );
     }
-    handleGendersChange = (value: string[]) => {
+    filterHandleGendersChange = (value: string[]) => {
         this.updateHash(
             (this.props.offset / this.props.limit) + 1,
             this.props.petStatuses || DEFAULT_S_FILTERS,
@@ -145,7 +148,7 @@ export class _PetsController extends React.Component<Props> {
                                 allowClear
                                 placeholder={i18n.t('Pets.State')}
                                 defaultValue={DEFAULT_S_FILTERS}
-                                onChange={this.handleStatusesChange}
+                                onChange={this.filterHandleStatusesChange}
                                 options={PetStates.map((_) => {
                                     return { value: _, label: i18n.t(`PetStates.${_.toLowerCase()}`) }
                                 })}
@@ -158,7 +161,7 @@ export class _PetsController extends React.Component<Props> {
                                 allowClear
                                 placeholder={i18n.t('Pets.Gender')}
                                 defaultValue={PetGenders}
-                                onChange={this.handleGendersChange}
+                                onChange={this.filterHandleGendersChange}
                                 options={PetGenders.map((_) => {
                                     return { value: _, label: i18n.t(`PetGenders.${_.toLowerCase()}`) }
                                 })}
@@ -171,7 +174,7 @@ export class _PetsController extends React.Component<Props> {
                                 allowClear
                                 placeholder={i18n.t('Pets.Type')}
                                 defaultValue={PetTypes}
-                                onChange={this.handleTypesChange}
+                                onChange={this.filterHandleTypesChange}
                                 options={PetTypes.map((_) => {
                                     return { value: _, label: i18n.t(`PetTypes.${_.toLowerCase()}`) }
                                 })}
@@ -212,7 +215,9 @@ export class _PetsController extends React.Component<Props> {
                                                         items={PetStates.map((_): IItem => {
                                                             return { value: _, description: i18n.t(`PetStates.${_.toLowerCase()}`) }
                                                         })}
-                                                        onSave={(value: string) => { }}
+                                                        onSave={(value) => {
+                                                            this.props.changeStatus(record.id, value);
+                                                        }}
                                                     />}
                                                     </Col>
                                                 </div>
@@ -234,7 +239,9 @@ export class _PetsController extends React.Component<Props> {
                                                         items={PetTypes.map((_): IItem => {
                                                             return { value: _, description: i18n.t(`PetTypes.${_.toLowerCase()}`) }
                                                         })}
-                                                        onSave={(value: string) => { }}
+                                                        onSave={(value) => {
+                                                            this.props.changeType(record.id, value);
+                                                        }}
                                                     />}
                                                     </Col>
                                                 </div>
@@ -260,7 +267,9 @@ export class _PetsController extends React.Component<Props> {
                                                         items={PetGenders.map((_): IItem => {
                                                             return { value: _, description: i18n.t(`PetGenders.${_.toLowerCase()}`) }
                                                         })}
-                                                        onSave={(value: string) => { }}
+                                                        onSave={(value) => {
+                                                            this.props.changeGender(record.id, value);
+                                                        }}
                                                     />}
                                                     </Col>
                                                 </div>
@@ -321,7 +330,25 @@ const PetsController = connect((state: IStore, props: Props) => {
                 petStatuses: petStatuses,
                 types: types
             }));
-        }
+        },
+        changeStatus: (id: string, value: PetState) => {
+            dispatch(changeStatus({
+                id: id,
+                value: value,
+            }));
+        },
+        changeGender: (id: string, value: PetGender) => {
+            dispatch(changeGender({
+                id: id,
+                value: value,
+            }));
+        },
+        changeType: (id: string, value: PetType) => {
+            dispatch(changeType({
+                id: id,
+                value: value,
+            }));
+        },
     }
 })(_PetsController);
 
