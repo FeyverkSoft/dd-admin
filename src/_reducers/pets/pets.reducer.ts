@@ -2,7 +2,7 @@ import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios'
 import { api, Config } from '../../core';
 import { BaseResponse } from '../../_services/entity';
-import { PetGender, PetSearchResult, PetState } from './IPet';
+import { PetGender, PetSearchResult, PetState, PetType } from './IPet';
 
 const count = 15;//количество отображаемых сообщений петов по дефолту
 
@@ -15,6 +15,7 @@ export const fetchPets = createAsyncThunk(
         petStatuses?: Array<PetState> | undefined,
         petGenders?: Array<PetGender> | undefined,
         text?: string,
+        types?: Array<PetType> | undefined,
     }, { signal }) => {
         const source = axios.CancelToken.source()
         signal.addEventListener('abort', () => {
@@ -29,6 +30,7 @@ export const fetchPets = createAsyncThunk(
                     petStatuses: params.petStatuses,
                     genders: params.petGenders,
                     text: params.text,
+                    types: params.types,
                 },
                 paramsSerializer: {
                     indexes: true,
