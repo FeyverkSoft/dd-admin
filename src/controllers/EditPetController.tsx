@@ -8,13 +8,15 @@ import { hasVal } from '../core/ObjCore';
 import { IStore } from '../_helpers';
 import { IPet, PetGender, PetGenders, PetState, PetStates, PetType, PetTypes } from '../_reducers/pets/IPet';
 import { fetchPets, changeStatus, changeGender, changeType, fetchPet } from '../_reducers/pets';
-import { Breadcrumb, Row, Col, Button, Tooltip, Table, Select, Space } from 'antd';
+import { Breadcrumb, Row, Col, Button, Tooltip, Table, Select, Space, Form, Input } from 'antd';
 import type { SelectProps } from 'antd';
 import { Link } from 'react-router-dom';
 import Search from 'antd/lib/input/Search';
 import i18n from '../core/Lang';
 import memoize from 'lodash.memoize';
 import { EditableSelect, IItem } from '../_components/EditableSelect';
+import TextArea from 'antd/es/input/TextArea';
+import { Editor } from '../_components/Editor/Editor';
 
 
 interface Props extends RouteComponentProps<any> {
@@ -49,9 +51,38 @@ export class _EditPetController extends React.Component<Props> {
                     </Breadcrumb.Item>
                 </Breadcrumb>
                 <div className={style["pet-edit"]}>
-                    <Row gutter={[25, 25]}>
-                    
-                    </Row>
+                    <Form
+                            initialValues={this.props.result}
+                    //onFinish={this.handleSubmit}
+                    >
+                        <Form.Item
+                            label={i18n.t('Pet.Description')}
+                            name='mdShortBody'
+                            rules={[
+                                {
+                                    required: true,
+                                    message: i18n.t('Pet.DescriptionRequired'),
+                                },
+                            ]}
+                        >
+                            <Input
+                                placeholder={i18n.t("Pet.Description")}
+                            />
+                        </Form.Item>
+                        <Form.Item
+                            label={i18n.t('Pet.Body')}
+                            name='mdBody'
+                            rules={[
+                                {
+                                    required: true,
+                                    message: i18n.t('Pet.BodyRequired'),
+                                },
+                            ]}
+                        >
+                            <Editor value={this.props.result.mdBody}></Editor>
+                        </Form.Item>
+                    </Form>
+
                 </div>
             </div>
         );
