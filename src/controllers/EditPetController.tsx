@@ -2,13 +2,13 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import style from './pets.module.scss';
 import { Trans, useTranslation } from 'react-i18next';
-import { HomeOutlined, EditOutlined } from '@ant-design/icons';
+import { HomeOutlined, UploadOutlined } from '@ant-design/icons';
 import { RouteComponentProps } from 'react-router';
 import { hasVal } from '../core/ObjCore';
 import { IStore } from '../_helpers';
 import { IPet, PetGender, PetGenders, PetState, PetStates, PetType, PetTypes } from '../_reducers/pets/IPet';
 import { fetchPets, changeStatus, changeGender, changeType, fetchPet } from '../_reducers/pets';
-import { Breadcrumb, Row, Col, Button, Tooltip, Table, Select, Space, Form, Input } from 'antd';
+import { Breadcrumb, Row, Col, Button, Tooltip, Table, Select, Space, Form, Input, Upload, Modal } from 'antd';
 import type { SelectProps } from 'antd';
 import { Link } from 'react-router-dom';
 import Search from 'antd/lib/input/Search';
@@ -17,6 +17,7 @@ import memoize from 'lodash.memoize';
 import { EditableSelect, IItem } from '../_components/EditableSelect';
 import TextArea from 'antd/es/input/TextArea';
 import { Editor } from '../_components/Editor/Editor';
+import { TokenStorage } from '../core/TokenStorage';
 
 
 interface Props extends RouteComponentProps<any> {
@@ -51,8 +52,16 @@ export class _EditPetController extends React.Component<Props> {
                     </Breadcrumb.Item>
                 </Breadcrumb>
                 <div className={style["pet-edit"]}>
+                    <Upload
+                        action="https://dobrodom.online/api/admin/Documents"
+                        headers={{
+                            'Authorization': `Bearer ${TokenStorage.getToken()}`
+                        }}
+                    >
+                        <Button icon={<UploadOutlined rev='button' />}>Click to Upload</Button>
+                    </Upload>
                     <Form
-                            initialValues={this.props.result}
+                        initialValues={this.props.result}
                     //onFinish={this.handleSubmit}
                     >
                         <Form.Item

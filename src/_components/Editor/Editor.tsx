@@ -36,8 +36,7 @@ export const Editor = ({ ...props }: EditorProps) => {
                 flex: '1 1 50%'
             }}>
             <MarkdownContent
-
-                value={value}></MarkdownContent>
+                value={value}/>
         </div>
     </div>
 }
