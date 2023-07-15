@@ -31,6 +31,8 @@ const NotFoundController = load(lazy(() => import("./controllers/NotFoundControl
 const AuthController = load(lazy(() => import("./controllers/AuthController")));
 const LogoutController = load(lazy(() => import("./controllers/LogoutController")));
 const PetsController = load(lazy(() => import("./controllers/PetsController")));
+const EditPetController = load(lazy(() => import("./controllers/EditPetController")));
+
 
 const getItem = (
     label: React.ReactNode,
@@ -108,9 +110,10 @@ const _MyApp = (props: { isAuth: boolean }) => {
                     </Header>
                     <TryCatch>
                         <Switch>
-                            <NotPrivateRoute path='/admin/auth' component={AuthController} />
-                            <PrivateRoute path='/admin/logout' component={LogoutController} />
-                            <PrivateRoute path='/admin/pets' component={PetsController} />
+                            <NotPrivateRoute path='/admin/auth' strict exact component={AuthController} />
+                            <PrivateRoute path='/admin/logout' strict exact component={LogoutController} />
+                            <PrivateRoute path='/admin/pets' strict exact component={PetsController} />
+                            <PrivateRoute path='/admin/pets/:id/edit' strict exact component={EditPetController} />
                             <Route component={NotFoundController} />
                         </Switch>
                     </TryCatch>

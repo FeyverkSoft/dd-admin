@@ -284,7 +284,7 @@ export class _PetsController extends React.Component<Props> {
                                         fixed: 'right',
                                         render: memoize((value: string, record: IPet) => {
                                             return <div>
-                                                    <Link to={`/admin/pets/${value}`} >
+                                                    <Link to={`/admin/pets/${value}/edit`} >
                                                         <EditOutlined rev={'span'} />
                                                     </Link>
                                                 </div>
@@ -311,7 +311,7 @@ export class _PetsController extends React.Component<Props> {
 
 
 const PetsController = connect((state: IStore, props: Props) => {
-    const { total, items, isLoading } = state.pets;
+    const { total, items, isLoading } = state.pets.search;
 
     const limit = Number(props.match.params.limit || hasVal('limit') || 15);
     const offset = Number(props.match.params.offset || hasVal('offset') || 0);

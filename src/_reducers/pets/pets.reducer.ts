@@ -6,6 +6,23 @@ import { IPet, PetGender, PetSearchResult, PetState, PetType } from './IPet';
 
 const count = 15;//количество отображаемых сообщений петов по дефолту
 
+export interface PetReduxState {
+    search: PetSearchResult;
+    pet?: IPet;
+    isLoading: boolean;
+}
+
+const initialState: PetReduxState = {
+    isLoading: false,
+    search: {
+        isLoading: false,
+        total: 0,
+        limit: count,
+        offset: 0,
+        items: []
+    }
+};
+
 export const fetchPets = createAsyncThunk(
     'pets/fetch',
     async (params: {
@@ -35,6 +52,24 @@ export const fetchPets = createAsyncThunk(
                 paramsSerializer: {
                     indexes: true,
                 },
+                cancelToken: source.token,
+            })
+        return response.data
+    }
+)
+
+export const fetchPet = createAsyncThunk(
+    'pet/fetch',
+    async (params: {
+        organisationId: string,
+        id: string,
+    }, { signal }) => {
+        const source = axios.CancelToken.source()
+        signal.addEventListener('abort', () => {
+            source.cancel()
+        })
+        const response = await api.get<BaseResponse & IPet>(Config.BuildUrl(`/admin/pets/${params.organisationId}/${params.id}`),
+            {
                 cancelToken: source.token,
             })
         return response.data
@@ -107,13 +142,6 @@ export const changeType = createAsyncThunk(
     }
 )
 
-const initialState: PetSearchResult = {
-    isLoading: false,
-    total: 0,
-    limit: count,
-    offset: 0,
-    items: []
-};
 const { actions, reducer } = createSlice({
     name: 'pets',
     initialState,
@@ -123,42 +151,56 @@ const { actions, reducer } = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(fetchPets.pending, (state, action) => {
-                state.isLoading = true;
+                state.search.isLoading = true;
                 return state;
             })
             .addCase(fetchPets.fulfilled, (state, action) => {
-                state = action.payload;
+                state.search = action.payload;
+                state.search.isLoading = false;
+                return state;
+            })
+            .addCase(fetchPets.rejected, (state, action) => {
+                state.search.isLoading = false;
+                return state;
+            })
+
+            .addCase(fetchPet.pending, (state, action) => {
+                state.isLoading = true;
+                return state;
+            })
+            .addCase(fetchPet.fulfilled, (state, action) => {
+                state.pet = action.payload;
                 state.isLoading = false;
                 return state;
             })
 
             .addCase(changeStatus.pending, (state, action) => {
-                state.isLoading = true;
+                state.search.isLoading = true;
                 return state;
             })
             .addCase(changeStatus.fulfilled, (state, action) => {
-                state.items.filter(_ => _.id === action.payload.id)[0].petState = action.payload.petState;
-                state.isLoading = false;
+                state.search.items.filter(_ => _.id === action.payload.id)[0].petState = action.payload.petState;
+                state.search.isLoading = false;
                 return state;
             })
 
             .addCase(changeType.pending, (state, action) => {
-                state.isLoading = true;
+                state.search.isLoading = true;
                 return state;
             })
             .addCase(changeType.fulfilled, (state, action) => {
-                state.items.filter(_ => _.id === action.payload.id)[0].type = action.payload.type;
-                state.isLoading = false;
+                state.search.items.filter(_ => _.id === action.payload.id)[0].type = action.payload.type;
+                state.search.isLoading = false;
                 return state;
             })
 
             .addCase(changeGender.pending, (state, action) => {
-                state.isLoading = true;
+                state.search.isLoading = true;
                 return state;
             })
             .addCase(changeGender.fulfilled, (state, action) => {
-                state.items.filter(_ => _.id === action.payload.id)[0].gender = action.payload.gender;
-                state.isLoading = false;
+                state.search.items.filter(_ => _.id === action.payload.id)[0].gender = action.payload.gender;
+                state.search.isLoading = false;
                 return state;
             })
     },
