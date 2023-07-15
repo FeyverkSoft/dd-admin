@@ -1,2 +1,2 @@
-docker manifest create maiznpetr/pets-admin-client:v1.0.07.1 --amend maiznpetr/pets-admin-client:v1.0.07.1-amd64 --amend maiznpetr/pets-admin-client:v1.0.07.1-arm64v8
-docker manifest push maiznpetr/pets-admin-client:v1.0.07.1
+docker manifest create maiznpetr/pets-admin-client:v1.0.07.2 --amend maiznpetr/pets-admin-client:v1.0.07.2-amd64 --amend maiznpetr/pets-admin-client:v1.0.07.2-arm64v8
+docker manifest push maiznpetr/pets-admin-client:v1.0.07.2

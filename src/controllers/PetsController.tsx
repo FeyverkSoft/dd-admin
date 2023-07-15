@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import style from './pets.module.scss';
 import { Trans, useTranslation } from 'react-i18next';
-import { HomeOutlined } from '@ant-design/icons';
+import { HomeOutlined, EditOutlined } from '@ant-design/icons';
 import { RouteComponentProps } from 'react-router';
 import { hasVal } from '../core/ObjCore';
 import { IStore } from '../_helpers';
@@ -274,6 +274,20 @@ export class _PetsController extends React.Component<Props> {
                                                     </Col>
                                                 </div>
                                             }
+                                        }, (it, p) => JSON.stringify(p))
+                                    },
+                                    {
+                                        title: i18n.t('Pets.Actions'),
+                                        dataIndex: 'id',
+                                        key: 'id',
+                                        width: 100,
+                                        fixed: 'right',
+                                        render: memoize((value: string, record: IPet) => {
+                                            return <div>
+                                                    <Link to={`/admin/pets/${value}`} >
+                                                        <EditOutlined rev={'span'} />
+                                                    </Link>
+                                                </div>
                                         }, (it, p) => JSON.stringify(p))
                                     },
                                 ]}
