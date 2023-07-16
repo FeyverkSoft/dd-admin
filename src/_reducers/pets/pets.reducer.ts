@@ -20,7 +20,16 @@ const initialState: PetReduxState = {
         limit: count,
         offset: 0,
         items: []
-    }
+    },
+    pet: {
+        id: '',
+        name:'',
+        mdBody:'',
+        mdShortBody:'',
+        petState: 'unset',
+        gender: 'unset',
+        type: 'unset',
+    },
 };
 
 export const fetchPets = createAsyncThunk(

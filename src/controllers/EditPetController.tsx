@@ -8,12 +8,12 @@ import { hasVal } from '../core/ObjCore';
 import { IStore } from '../_helpers';
 import { IPet } from '../_reducers/pets/IPet';
 import { fetchPet, patchPet } from '../_reducers/pets';
-import { Breadcrumb, Button, Form, Input, Upload, UploadFile, UploadProps } from 'antd';
+import { Breadcrumb, Button, Form, FormInstance, Input, Upload, UploadFile, UploadProps } from 'antd';
 import { Link } from 'react-router-dom';
 import i18n from '../core/Lang';
 import { Editor } from '../_components/Editor/Editor';
 import { TokenStorage } from '../core/TokenStorage';
-import { useEffect, useState } from 'react';
+import { createRef, RefObject, useEffect, useState } from 'react';
 
 const UploadImg = (props: { text: string, value?: string, onChange(value: string): void; }) => {
 
@@ -66,6 +66,7 @@ interface Props extends RouteComponentProps<any> {
         mdBody?: string): void;
 }
 export class _EditPetController extends React.Component<Props> {
+    formRef: RefObject<FormInstance> = createRef<FormInstance>();
     changeImgBefore = (value: string) => {
         let { result } = this.props;
         this.props.saveData(result.id, value, result.afterPhotoLink, result.mdShortBody, result.mdBody);
@@ -76,8 +77,18 @@ export class _EditPetController extends React.Component<Props> {
         this.props.saveData(result.id, result.beforePhotoLink, value, result.mdShortBody, result.mdBody);
     };
 
+    handleSubmit = (values: any) => {
+        let { result } = this.props;
+        this.props.saveData(result.id, result.beforePhotoLink, result.afterPhotoLink, values?.mdShortBody ?? result.mdShortBody, values?.mdBody ?? result.mdBody);
+    };
+
     componentDidMount() {
         this.props.loadData(this.props.id);
+        setTimeout(() => {
+            if (this.formRef.current) {
+                this.formRef.current.setFieldsValue(this.props.result);
+            }
+        }, 100);
     }
 
     render() {
@@ -111,7 +122,8 @@ export class _EditPetController extends React.Component<Props> {
                     </div>
                     <Form
                         initialValues={this.props.result}
-                    //onFinish={this.handleSubmit}
+                        ref={this.formRef}
+                        onFinish={this.handleSubmit}
                     >
                         <Form.Item
                             label={i18n.t('Pet.Description')}
@@ -137,7 +149,15 @@ export class _EditPetController extends React.Component<Props> {
                                 },
                             ]}
                         >
-                            <Editor value={this.props.result.mdBody}></Editor>
+                            <Editor value={this.props.result?.mdBody}></Editor>
+                        </Form.Item>
+                        <Form.Item>
+                            <Button
+                                type="primary"
+                                htmlType="submit"
+                            >
+                                <Trans>Pet.Save</Trans>
+                            </Button>
                         </Form.Item>
                     </Form>
                 </div>
@@ -149,13 +169,20 @@ export class _EditPetController extends React.Component<Props> {
 
 const EditPetController = connect((state: IStore, props: Props) => {
     const { pet, isLoading } = state.pets;
-
     const id = props.match.params.id || hasVal('id');
 
     return {
         id: id,
         isLoading: isLoading,
-        result: pet ?? {},
+        result: pet ?? {
+            id: id,
+            name: '',
+            mdBody: '',
+            mdShortBody: '',
+            petState: 'unset',
+            gender: 'unset',
+            type: 'unset',
+        },
     };
 }, (dispatch: Function) => {
     return {

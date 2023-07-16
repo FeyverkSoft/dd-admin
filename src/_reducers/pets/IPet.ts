@@ -18,8 +18,8 @@ export interface IPet {
     mdBody: string;
     mdShortBody: string;
     petState: PetState;
-    gender: string;
-    type: string;
+    gender: PetGender;
+    type: PetType;
 }
 
 export interface PetSearchResult extends BaseSearchResult<IPet> {}
