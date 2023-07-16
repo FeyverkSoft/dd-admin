@@ -13,8 +13,8 @@ export type PetType = typeof PetTypes[number];
 export interface IPet {
     id: string;
     name: string;
-    before?: string;
-    after?: string;
+    beforePhotoLink?: string;
+    afterPhotoLink?: string;
     mdBody: string;
     mdShortBody: string;
     petState: PetState;

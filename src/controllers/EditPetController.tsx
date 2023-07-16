@@ -6,19 +6,49 @@ import { HomeOutlined, UploadOutlined } from '@ant-design/icons';
 import { RouteComponentProps } from 'react-router';
 import { hasVal } from '../core/ObjCore';
 import { IStore } from '../_helpers';
-import { IPet, PetGender, PetGenders, PetState, PetStates, PetType, PetTypes } from '../_reducers/pets/IPet';
-import { fetchPets, changeStatus, changeGender, changeType, fetchPet } from '../_reducers/pets';
-import { Breadcrumb, Row, Col, Button, Tooltip, Table, Select, Space, Form, Input, Upload, Modal } from 'antd';
-import type { SelectProps } from 'antd';
+import { IPet } from '../_reducers/pets/IPet';
+import { fetchPet } from '../_reducers/pets';
+import { Breadcrumb, Button, Form, Input, Upload, UploadProps } from 'antd';
 import { Link } from 'react-router-dom';
-import Search from 'antd/lib/input/Search';
 import i18n from '../core/Lang';
-import memoize from 'lodash.memoize';
-import { EditableSelect, IItem } from '../_components/EditableSelect';
-import TextArea from 'antd/es/input/TextArea';
 import { Editor } from '../_components/Editor/Editor';
 import { TokenStorage } from '../core/TokenStorage';
+import { useEffect, useState } from 'react';
 
+const UploadImg = (props: { text: string, value?: string, onChange(value: string): void; }) => {
+
+    const [value, changeValue] = useState(props.value);
+
+    useEffect(() => {
+        changeValue(props.value);
+    }, [props.value]);
+
+    const onChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
+        if (newFileList[0] && newFileList[0].status === 'done') {
+            let val = `/api/img/${newFileList[0].response.fileId}`;
+            changeValue(val)
+            props.onChange(val);
+        }
+    }
+
+    return <div className={style['img']}>
+        <div
+            className={style['PetBefAfImg']}
+            role="img"
+            style={{
+                backgroundImage: `url(${props.value})`
+            }} />
+        <Upload
+            action="https://dobrodom.online/api/admin/Documents"
+            onChange={onChange}
+            headers={{
+                'Authorization': `Bearer ${TokenStorage.getToken()}`
+            }}
+        >
+            <Button icon={<UploadOutlined rev='button' />}><Trans>{props.text}</Trans></Button>
+        </Upload>
+    </div>
+}
 
 interface Props extends RouteComponentProps<any> {
     isLoading: boolean;
@@ -27,6 +57,14 @@ interface Props extends RouteComponentProps<any> {
     loadData(id: string): void;
 }
 export class _EditPetController extends React.Component<Props> {
+    changeImgBefore = (value: string) => {
+        debugger;
+    };
+
+    changeImgAfter = (value: string) => {
+        debugger;
+    };
+
     componentDidMount() {
         this.props.loadData(this.props.id);
     }
@@ -52,14 +90,14 @@ export class _EditPetController extends React.Component<Props> {
                     </Breadcrumb.Item>
                 </Breadcrumb>
                 <div className={style["pet-edit"]}>
-                    <Upload
-                        action="https://dobrodom.online/api/admin/Documents"
-                        headers={{
-                            'Authorization': `Bearer ${TokenStorage.getToken()}`
-                        }}
-                    >
-                        <Button icon={<UploadOutlined rev='button' />}>Click to Upload</Button>
-                    </Upload>
+                    <div className={style["img-wrapper"]}>
+                        <UploadImg text='Pet.UploadBeforePhotoLink'
+                            value={this.props.result.beforePhotoLink}
+                            onChange={this.changeImgBefore} />
+                        <UploadImg text='Pet.UploadAfterPhotoLink'
+                            value={this.props.result.afterPhotoLink}
+                            onChange={this.changeImgAfter} />
+                    </div>
                     <Form
                         initialValues={this.props.result}
                     //onFinish={this.handleSubmit}

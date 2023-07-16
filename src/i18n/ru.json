@@ -54,7 +54,9 @@
         },
         "Pet": {
             "Description": "Краткое описание",
-            "Body": "Основная история"
+            "Body": "Основная история",
+            "UploadBeforePhotoLink": "Загрузить фото До",
+            "UploadAfterPhotoLink": "Загрузить фото После"
         }
     }
 }
