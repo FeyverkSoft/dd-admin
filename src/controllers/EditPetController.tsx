@@ -103,10 +103,10 @@ export class _EditPetController extends React.Component<Props> {
                 <div className={style["pet-edit"]}>
                     <div className={style["img-wrapper"]}>
                         <UploadImg text='Pet.UploadBeforePhotoLink'
-                            value={this.props.result.beforePhotoLink}
+                            value={this.props.result?.beforePhotoLink}
                             onChange={this.changeImgBefore} />
                         <UploadImg text='Pet.UploadAfterPhotoLink'
-                            value={this.props.result.afterPhotoLink}
+                            value={this.props.result?.afterPhotoLink}
                             onChange={this.changeImgAfter} />
                     </div>
                     <Form
@@ -155,7 +155,7 @@ const EditPetController = connect((state: IStore, props: Props) => {
     return {
         id: id,
         isLoading: isLoading,
-        result: pet,
+        result: pet ?? {},
     };
 }, (dispatch: Function) => {
     return {
