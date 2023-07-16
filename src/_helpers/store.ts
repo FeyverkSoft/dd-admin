@@ -8,7 +8,7 @@ import { auth } from '../_reducers/auth/auth.reducer';
 import { AlertState } from '../_reducers/alert/AlertState';
 import { pets, PetReduxState } from '../_reducers/pets/pets.reducer';
 
-const config = { namespace: "DDA_V1.0.08.1_store" }
+const config = { namespace: "DDA_V1.0.08.3_store" }
 const middleware = [reduxLogger, thunk, save(config)];
 
 export const store = configureStore({

@@ -1,6 +1,6 @@
 {
   "name": "dobrodom-admin",
-  "version": "1.0.08.1",
+  "version": "1.0.08.3",
   "description": "Добродом admin",
   "main": "app.jsx",
   "homepage": "/admin/",

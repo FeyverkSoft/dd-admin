@@ -10,11 +10,7 @@ export interface EditorProps {
 
 export const Editor: React.FC<EditorProps> = ({ value = '', onChange }) => {
     const [edited, toggleEdited] = useState(false);
-    const [text, changeValue] = useState(value);
-
-    useEffect(() => {
-        changeValue(text);
-    }, [text]);
+    const [text, changeText] = useState(undefined);
 
     return <div style={{
         display: 'flex',
@@ -25,10 +21,10 @@ export const Editor: React.FC<EditorProps> = ({ value = '', onChange }) => {
                 display: 'flex',
                 flex: '1 1 50%'
             }}
-            value={text}
+            value={value}
             onChange={(e) => {
                 onChange(e.target.value);
-                return changeValue(e.target.value);
+                return changeText(e.target.value);
             }}></TextArea>
         <div
             style={{
@@ -36,7 +32,7 @@ export const Editor: React.FC<EditorProps> = ({ value = '', onChange }) => {
                 flex: '1 1 50%'
             }}>
             <MarkdownContent
-                value={text} />
+                value={value} />
         </div>
     </div>
 }

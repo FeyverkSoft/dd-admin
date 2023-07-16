@@ -88,7 +88,7 @@ export class _EditPetController extends React.Component<Props> {
             if (this.formRef.current) {
                 this.formRef.current.setFieldsValue(this.props.result);
             }
-        }, 100);
+        }, 500);
     }
 
     render() {
