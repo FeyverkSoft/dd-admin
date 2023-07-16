@@ -149,7 +149,7 @@ export class _EditPetController extends React.Component<Props> {
                                 },
                             ]}
                         >
-                            <Editor value={this.props.result?.mdBody}></Editor>
+                            <Editor/>
                         </Form.Item>
                         <Form.Item>
                             <Button

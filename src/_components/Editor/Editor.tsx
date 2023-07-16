@@ -1,23 +1,20 @@
 import TextArea from "antd/es/input/TextArea";
 import React, { useEffect } from 'react';
 import { useState } from "react";
-import { Select, Button, Tooltip } from "antd"
-import { SaveFilled, CloseOutlined } from '@ant-design/icons';
-import { IF } from '../../_helpers';
-import i18n from '../../core/Lang';
 import MarkdownContent from "../Shared/Md/MarkdownContent";
 
 export interface EditorProps {
-    value: string;
+    value?: string;
+    onChange?: (value: string) => void;
 }
 
-export const Editor = ({ ...props }: EditorProps) => {
+export const Editor: React.FC<EditorProps> = ({ value = '', onChange }) => {
     const [edited, toggleEdited] = useState(false);
-    const [value, changeValue] = useState(props.value);
+    const [text, changeValue] = useState(value);
 
     useEffect(() => {
-        changeValue(props.value);
-    }, [props.value]);
+        changeValue(text);
+    }, [text]);
 
     return <div style={{
         display: 'flex',
@@ -28,15 +25,18 @@ export const Editor = ({ ...props }: EditorProps) => {
                 display: 'flex',
                 flex: '1 1 50%'
             }}
-            value={value}
-            onChange={(e) => changeValue(e.target.value)}></TextArea>
+            value={text}
+            onChange={(e) => {
+                onChange(e.target.value);
+                return changeValue(e.target.value);
+            }}></TextArea>
         <div
             style={{
                 display: 'flex',
                 flex: '1 1 50%'
             }}>
             <MarkdownContent
-                value={value}/>
+                value={text} />
         </div>
     </div>
 }
