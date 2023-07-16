@@ -7,8 +7,8 @@ import { RouteComponentProps } from 'react-router';
 import { hasVal } from '../core/ObjCore';
 import { IStore } from '../_helpers';
 import { IPet } from '../_reducers/pets/IPet';
-import { fetchPet } from '../_reducers/pets';
-import { Breadcrumb, Button, Form, Input, Upload, UploadProps } from 'antd';
+import { fetchPet, patchPet } from '../_reducers/pets';
+import { Breadcrumb, Button, Form, Input, Upload, UploadFile, UploadProps } from 'antd';
 import { Link } from 'react-router-dom';
 import i18n from '../core/Lang';
 import { Editor } from '../_components/Editor/Editor';
@@ -24,12 +24,15 @@ const UploadImg = (props: { text: string, value?: string, onChange(value: string
     }, [props.value]);
 
     const onChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
+        setFileList(newFileList);
         if (newFileList[0] && newFileList[0].status === 'done') {
             let val = `/api/img/${newFileList[0].response.fileId}`;
             changeValue(val)
             props.onChange(val);
+            setFileList([]);
         }
     }
+    const [fileList, setFileList] = useState<UploadFile[]>([]);
 
     return <div className={style['img']}>
         <div
@@ -41,6 +44,7 @@ const UploadImg = (props: { text: string, value?: string, onChange(value: string
         <Upload
             action="https://dobrodom.online/api/admin/Documents"
             onChange={onChange}
+            fileList={fileList}
             headers={{
                 'Authorization': `Bearer ${TokenStorage.getToken()}`
             }}
@@ -55,14 +59,21 @@ interface Props extends RouteComponentProps<any> {
     id: string;
     result: IPet;
     loadData(id: string): void;
+    saveData(id: string,
+        beforePhotoLink?: string,
+        afterPhotoLink?: string,
+        mdShortBody?: string,
+        mdBody?: string): void;
 }
 export class _EditPetController extends React.Component<Props> {
     changeImgBefore = (value: string) => {
-        debugger;
+        let { result } = this.props;
+        this.props.saveData(result.id, value, result.afterPhotoLink, result.mdShortBody, result.mdBody);
     };
 
     changeImgAfter = (value: string) => {
-        debugger;
+        let { result } = this.props;
+        this.props.saveData(result.id, result.beforePhotoLink, value, result.mdShortBody, result.mdBody);
     };
 
     componentDidMount() {
@@ -129,7 +140,6 @@ export class _EditPetController extends React.Component<Props> {
                             <Editor value={this.props.result.mdBody}></Editor>
                         </Form.Item>
                     </Form>
-
                 </div>
             </div>
         );
@@ -154,7 +164,20 @@ const EditPetController = connect((state: IStore, props: Props) => {
                 id: id,
                 organisationId: '10000000-0000-4000-0000-000000000000',
             }));
-        }/*,
+        },
+        saveData: (id: string,
+            beforePhotoLink?: string,
+            afterPhotoLink?: string,
+            mdShortBody?: string,
+            mdBody?: string) => {
+            dispatch(patchPet({
+                id: id,
+                beforePhotoLink: beforePhotoLink,
+                afterPhotoLink: afterPhotoLink,
+                mdShortBody: mdShortBody,
+                mdBody: mdBody,
+            }));
+        },/*,
         changeStatus: (id: string, value: PetState) => {
             dispatch(changeStatus({
                 id: id,

@@ -142,6 +142,34 @@ export const changeType = createAsyncThunk(
     }
 )
 
+export const patchPet = createAsyncThunk(
+    'pets/patch',
+    async (params: {
+        id: string,
+        beforePhotoLink?: string,
+        afterPhotoLink?: string,
+        mdShortBody?: string,
+        mdBody?: string,
+    }, { signal }) => {
+        const source = axios.CancelToken.source()
+        signal.addEventListener('abort', () => {
+            source.cancel()
+        })
+        const response = await api.patch<BaseResponse & IPet>(Config.BuildUrl(`/admin/pets/${params.id}`),
+            {
+                beforePhotoLink: params.beforePhotoLink,
+                afterPhotoLink: params.afterPhotoLink,
+                mdShortBody: params.mdShortBody,
+                mdBody: params.mdBody,
+            },
+            {
+
+                cancelToken: source.token,
+            })
+        return response.data
+    }
+)
+
 const { actions, reducer } = createSlice({
     name: 'pets',
     initialState,
@@ -201,6 +229,20 @@ const { actions, reducer } = createSlice({
             .addCase(changeGender.fulfilled, (state, action) => {
                 state.search.items.filter(_ => _.id === action.payload.id)[0].gender = action.payload.gender;
                 state.search.isLoading = false;
+                return state;
+            })
+
+            .addCase(patchPet.pending, (state, action) => {
+                state.isLoading = true;
+                return state;
+            })
+            .addCase(patchPet.fulfilled, (state, action) => {
+                state.pet = action.payload;
+                state.isLoading = false;
+                return state;
+            })
+            .addCase(patchPet.rejected, (state, action) => {
+                state.isLoading = false;
                 return state;
             })
     },
