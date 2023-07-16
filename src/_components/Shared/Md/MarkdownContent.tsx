@@ -88,12 +88,13 @@ class _MarkdownContent extends React.Component<Props> {
                     }
                 )
             } catch (error) {
-                
+console.log(error);
+
             }
         }
     }
 
-    primaryRecognize = memoize((src: any) => {
+    primaryRecognize = (src: any) => {
         const header: RegExp = /^(?![ ]+)([#]{1,6})((:\(([\w\s]+)\)){0,1})([ ]{1})/i;
         const quote: RegExp = /^(?![ ]+)([>]{1})([ ]{1})/gi;
         const section: RegExp = /^((?![ ]+)(!===))|((===!))/gi;
@@ -182,9 +183,7 @@ class _MarkdownContent extends React.Component<Props> {
             return new Element('br');
 
         return new Token('span', src, false, false, style['text']);
-    }, (it, ...arg) => {
-        return it;
-    })
+    }
 
     //первичный грубый разбор
     primaryParse(src: any): any {
@@ -198,7 +197,7 @@ class _MarkdownContent extends React.Component<Props> {
                 if ((element.className === temp.className
                     || !temp.className
                     || !temp.strict
-                    || element.className.indexOf(temp.className) === 0)
+                    || element.className?.indexOf(temp.className) === 0)
                     && element.element === temp.element) {
                     if (element.content && !element.onlyText)
                         element.content = this.primaryParse(element.content);
@@ -227,7 +226,7 @@ class _MarkdownContent extends React.Component<Props> {
     }
 
     //обдумать
-    secondaryRecognize = memoize((src: any, p: number | undefined = undefined) => {
+    secondaryRecognize = (src: any, p: number | undefined = undefined) => {
         if (!src || src.length <= 1)
             return src;
         let tempTokens = [];
@@ -405,12 +404,10 @@ class _MarkdownContent extends React.Component<Props> {
         if (tempTokens.length === 1)
             return tempTokens[0];
         return tempTokens;
-    }, (it, ...arg) => {
-        return it;
-    })
+    }
 
     //вторичный и более детальный разбор, + объединение листьев
-    secondaryParse = memoize((element: any) => {
+    secondaryParse = (element: any) => {
         if (!element || element.onlyText)
             return element;
         let result: any = element;
@@ -431,9 +428,7 @@ class _MarkdownContent extends React.Component<Props> {
                 result.content = this.secondaryParse(result.content);
         }
         return result;//заглушка
-    }, (it, ...arg) => {
-        return it;
-    })
+    }
 
     smile = memoize((text: any) => {
         if (typeof (text) != typeof (''))
