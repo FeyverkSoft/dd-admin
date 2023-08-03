@@ -8,7 +8,7 @@ import { hasVal } from '../core/ObjCore';
 import { IStore } from '../_helpers';
 import { IPet } from '../_reducers/pets/IPet';
 import { fetchPet, patchPet } from '../_reducers/pets';
-import { Breadcrumb, Collapse, Button, Form, FormInstance, Input, Upload, UploadFile, UploadProps } from 'antd';
+import { Breadcrumb, Button, Form, FormInstance, Input, Upload, UploadFile, UploadProps } from 'antd';
 import { Link } from 'react-router-dom';
 import i18n from '../core/Lang';
 import { Editor } from '../_components/Editor/Editor';
@@ -106,15 +106,12 @@ export class _EditPetController extends React.Component<Props> {
                         </Link>
                     </Breadcrumb.Item>
                     <Breadcrumb.Item>
-                        <Link to={`/admin/pets/${this.props.id}/edit`} >
-                            <Trans>{this.props?.result?.name ? this.props.result.name : i18n.t("Pets.New")}</Trans>
+                        <Link to={`/admin/pets/${this.props.id}/new`} >
+                            <Trans>{this.props?.result?.name ? this.props.result.name : i18n.t("Pets.Edit")}</Trans>
                         </Link>
                     </Breadcrumb.Item>
                 </Breadcrumb>
                 <div className={style["pet-edit"]}>
-                    <Collapse
-                        size="small">
-                        <Collapse.Panel key={1} header={i18n.t("Pets.Photos")}>
                     <div className={style["img-wrapper"]}>
                         <UploadImg text='Pet.UploadBeforePhotoLink'
                             value={this.props.result?.beforePhotoLink}
@@ -123,9 +120,6 @@ export class _EditPetController extends React.Component<Props> {
                             value={this.props.result?.afterPhotoLink}
                             onChange={this.changeImgAfter} />
                     </div>
-                        </Collapse.Panel>
-                </Collapse>
-                    <br/>
                     {this.props.isLoading || this.props.result === undefined? <></>:
                     <Form
                         initialValues={this.props.result}
