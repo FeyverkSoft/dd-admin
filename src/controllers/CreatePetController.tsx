@@ -8,7 +8,7 @@ import { hasVal } from '../core/ObjCore';
 import { IStore } from '../_helpers';
 import { IPet } from '../_reducers/pets/IPet';
 import { fetchPet, patchPet } from '../_reducers/pets';
-import { Breadcrumb, Button, Form, FormInstance, Input, Upload, UploadFile, UploadProps } from 'antd';
+import { Breadcrumb, Button, Form, FormInstance, Input, Steps, Upload, UploadFile, UploadProps } from 'antd';
 import { Link } from 'react-router-dom';
 import i18n from '../core/Lang';
 import { Editor } from '../_components/Editor/Editor';
@@ -65,8 +65,26 @@ interface Props extends RouteComponentProps<any> {
         mdShortBody?: string,
         mdBody?: string): void;
 }
-export class _EditPetController extends React.Component<Props> {
+export class _EditPetController extends React.Component<Props, { current: number }> {
     formRef: RefObject<FormInstance> = createRef<FormInstance>();
+
+    constructor(props: Props) {
+        super(props);
+        this.state = { current: 0, };
+    }
+
+    next = () => {
+        this.setState({
+            current: this.state.current + 1,
+        });
+    };
+
+    prev = () => {
+        this.setState({
+            current: this.state.current - 1,
+        });
+    };
+
     changeImgBefore = (value: string) => {
         let { result } = this.props;
         this.props.saveData(result.id, value, result.afterPhotoLink, result.mdShortBody, result.mdBody);
@@ -82,16 +100,23 @@ export class _EditPetController extends React.Component<Props> {
         this.props.saveData(result.id, result.beforePhotoLink, result.afterPhotoLink, values?.mdShortBody ?? result.mdShortBody, values?.mdBody ?? result.mdBody);
     };
 
-    componentDidMount() {
-        this.props.loadData(this.props.id);
-        setTimeout(() => {
-            if (this.formRef.current) {
-                this.formRef.current.setFieldsValue(this.props.result);
-            }
-        }, 500);
-    }
-
     render() {
+        const steps = [
+            {
+                title: i18n.t('CreatePet.EnterName')
+            },
+            {
+                title: i18n.t('CreatePet.SelectType')
+            },
+            {
+                title: i18n.t('CreatePet.LoadPhoto'),
+            },
+            {
+                title: i18n.t('CreatePet.EnterDescription'),
+            },
+        ];
+        const items = steps.map((item) => ({ key: item.title, title: item.title }));
+        const { current } = this.state;
         return (
             <div>
                 <Breadcrumb className={style["bc"]}>
@@ -107,11 +132,12 @@ export class _EditPetController extends React.Component<Props> {
                     </Breadcrumb.Item>
                     <Breadcrumb.Item>
                         <Link to={`/admin/pets/${this.props.id}/new`} >
-                            <Trans>{this.props?.result?.name ? this.props.result.name : i18n.t("Pets.Edit")}</Trans>
+                            <Trans>{i18n.t("CreatePet.New")}</Trans>
                         </Link>
                     </Breadcrumb.Item>
                 </Breadcrumb>
                 <div className={style["pet-edit"]}>
+                    <Steps current={current} items={items} />
                     <div className={style["img-wrapper"]}>
                         <UploadImg text='Pet.UploadBeforePhotoLink'
                             value={this.props.result?.beforePhotoLink}
@@ -120,48 +146,48 @@ export class _EditPetController extends React.Component<Props> {
                             value={this.props.result?.afterPhotoLink}
                             onChange={this.changeImgAfter} />
                     </div>
-                    {this.props.isLoading || this.props.result === undefined? <></>:
-                    <Form
-                        initialValues={this.props.result}
-                        ref={this.formRef}
-                        onFinish={this.handleSubmit}
-                    >
-                        <Form.Item
-                            label={i18n.t('Pet.Description')}
-                            name='mdShortBody'
-                            rules={[
-                                {
-                                    required: true,
-                                    message: i18n.t('Pet.DescriptionRequired'),
-                                },
-                            ]}
+                    {this.props.isLoading || this.props.result === undefined ? <></> :
+                        <Form
+                            initialValues={this.props.result}
+                            ref={this.formRef}
+                            onFinish={this.handleSubmit}
                         >
-                            <Input
-                                placeholder={i18n.t("Pet.Description")}
-                            />
-                        </Form.Item>
-                        <Form.Item
-                            label={i18n.t('Pet.Body')}
-                            name='mdBody'
-                            rules={[
-                                {
-                                    required: true,
-                                    message: i18n.t('Pet.BodyRequired'),
-                                },
-                            ]}
-                        >
-                            <Editor/>
-                        </Form.Item>
-                        <Form.Item>
-                            <Button
-                                type="primary"
-                                htmlType="submit"
+                            <Form.Item
+                                label={i18n.t('Pet.Description')}
+                                name='mdShortBody'
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: i18n.t('Pet.DescriptionRequired'),
+                                    },
+                                ]}
                             >
-                                <Trans>Pet.Save</Trans>
-                            </Button>
-                        </Form.Item>
-                    </Form>
-    }
+                                <Input
+                                    placeholder={i18n.t("Pet.Description")}
+                                />
+                            </Form.Item>
+                            <Form.Item
+                                label={i18n.t('Pet.Body')}
+                                name='mdBody'
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: i18n.t('Pet.BodyRequired'),
+                                    },
+                                ]}
+                            >
+                                <Editor />
+                            </Form.Item>
+                            <Form.Item>
+                                <Button
+                                    type="primary"
+                                    htmlType="submit"
+                                >
+                                    <Trans>Pet.Save</Trans>
+                                </Button>
+                            </Form.Item>
+                        </Form>
+                    }
                 </div>
             </div>
         );

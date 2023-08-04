@@ -5,7 +5,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { HomeOutlined, EditOutlined } from '@ant-design/icons';
 import { RouteComponentProps } from 'react-router';
 import { hasVal } from '../core/ObjCore';
-import { IStore } from '../_helpers';
+import { getGuid, IStore } from '../_helpers';
 import { IPet, PetGender, PetGenders, PetState, PetStates, PetType, PetTypes } from '../_reducers/pets/IPet';
 import { fetchPets, changeStatus, changeGender, changeType } from '../_reducers/pets';
 import { Breadcrumb, Row, Col, Button, Tooltip, Table, Select, Space } from 'antd';
@@ -15,6 +15,7 @@ import Search from 'antd/lib/input/Search';
 import i18n from '../core/Lang';
 import memoize from 'lodash.memoize';
 import { EditableSelect, IItem } from '../_components/EditableSelect';
+import { history } from '../_helpers/history';
 
 
 const DEFAULT_S_FILTERS: Array<PetState> = ['alive', 'death', 'adopted', 'critical', 'wanted'];
@@ -84,6 +85,10 @@ export class _PetsController extends React.Component<Props> {
         }
     };
 
+    onAddPet = () => {
+        this.props.history.push(`/admin/pets/${getGuid()}/create`);
+    }
+
     updateHash = (page: number,
         petStatuses?: PetState[] | undefined,
         genders?: PetGender[] | undefined,
@@ -136,8 +141,8 @@ export class _PetsController extends React.Component<Props> {
                     <Row gutter={[25, 25]}>
                         <Col xs={15} sm={15} md={12} lg={12} xl={8}>
                             {<Search
-                                placeholder="введите текст для поиска"
-                                enterButton='search'
+                                placeholder={i18n.t('Pets.SearchText')}
+                                enterButton={i18n.t('Pets.Search')}
                                 onSearch={this.onSearch}
                             />}
                         </Col>
@@ -183,7 +188,7 @@ export class _PetsController extends React.Component<Props> {
                         <Col xs={4} sm={3} md={2} lg={2} xl={1}>
                             {<Button
                                 type='primary'
-                            // onClick={this.toggleAddPetsModal}
+                                onClick={this.onAddPet}
                             >
                                 <Trans>Pets.Add</Trans>
                             </Button>}
@@ -284,10 +289,10 @@ export class _PetsController extends React.Component<Props> {
                                         fixed: 'right',
                                         render: memoize((value: string, record: IPet) => {
                                             return <div>
-                                                    <Link to={`/admin/pets/${value}/edit`} >
-                                                        <EditOutlined rev={'span'} />
-                                                    </Link>
-                                                </div>
+                                                <Link to={`/admin/pets/${value}/edit`} >
+                                                    <EditOutlined rev={'span'} />
+                                                </Link>
+                                            </div>
                                         }, (it, p) => JSON.stringify(p))
                                     },
                                 ]}

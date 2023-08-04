@@ -8,7 +8,7 @@ import { hasVal } from '../core/ObjCore';
 import { IStore } from '../_helpers';
 import { IPet } from '../_reducers/pets/IPet';
 import { fetchPet, patchPet } from '../_reducers/pets';
-import { Breadcrumb, Collapse, Button, Form, FormInstance, Input, Upload, UploadFile, UploadProps } from 'antd';
+import { Breadcrumb, Collapse, Button, Form, FormInstance, Input, Upload, UploadFile, UploadProps, message, Steps, theme} from 'antd';
 import { Link } from 'react-router-dom';
 import i18n from '../core/Lang';
 import { Editor } from '../_components/Editor/Editor';
