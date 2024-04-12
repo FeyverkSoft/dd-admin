@@ -24,3 +24,4 @@ yarn-error.log*
 /docker/build
 /.idea/*
 /.idea/.idea.DobroAdmin.dir/.idea
+package-lock.json
