@@ -24,6 +24,7 @@ export const EditableSelect = ({ ...props }: EditableSelectProps) => {
         <IF value={edited}>
             <Select
                 size='middle'
+                style={{ minWidth: '70%' }}
                 defaultValue={props.value}
                 onChange={(value) => changeValue(value)}
             >

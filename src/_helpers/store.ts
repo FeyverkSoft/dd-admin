@@ -6,10 +6,9 @@ import { load, save } from 'redux-localstorage-simple';
 import { alerts } from '../_reducers/alert/alert.reducer';
 import { auth } from '../_reducers/auth/auth.reducer';
 import { AlertState } from '../_reducers/alert/AlertState';
-import { pets } from '../_reducers/pets/pets.reducer';
-import { PetSearchResult } from '../_reducers/pets/IPet';
+import { pets, PetReduxState } from '../_reducers/pets/pets.reducer';
 
-const config = { namespace: "DDA_V1_store" }
+const config = { namespace: "DDA_V1.0.08.3_store" }
 const middleware = [reduxLogger, thunk, save(config)];
 
 export const store = configureStore({
@@ -21,6 +20,6 @@ export const store = configureStore({
 
 export interface IStore {
     alerts: AlertState,
-    pets: PetSearchResult,
+    pets: PetReduxState,
     auth: { isAuth: boolean },
 }

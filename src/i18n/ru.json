@@ -44,12 +44,29 @@
             "Username": "Логин"
         },
         "Pets": {
+            "Search": "Поиск",
+            "SearchText": "введите текст для поиска",
+            "Add": "Добавить",
             "Pets": "Питомцы",
             "Name": "Имя",
             "State": "Статус",
             "Type": "Тип",
             "Gender": "Пол",
             "Actions": "Действия"
+        },
+        "Pet": {
+            "Description": "Краткое описание",
+            "Body": "Основная история",
+            "UploadBeforePhotoLink": "Загрузить фото До",
+            "UploadAfterPhotoLink": "Загрузить фото После",
+            "Save": "Сохранить"
+        },
+        "CreatePet": {
+            "EnterName": "Введите имя",
+            "SelectType": "Выбор типа",
+            "LoadPhoto": "Загрузите Фото",
+            "EnterDescription": "Введите описание",
+            "New": "Новый питомец"
         }
     }
 }

@@ -1,0 +1,19 @@
+@import "../../../../assets/_variables.scss"; // variables to override above
+
+.gmaps {
+    @include flex();
+    justify-content: center;
+    align-items    : center;
+
+    .logo {
+        font-weight: 600;
+        font-size  : 7rem;
+        color      : transparentize($black, .5);
+    }
+
+    iframe {
+        width     : 100%;
+        min-height: 20rem;
+        max-height: 40rem;
+    }
+}

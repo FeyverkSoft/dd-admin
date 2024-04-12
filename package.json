@@ -1,6 +1,6 @@
 {
   "name": "dobrodom-admin",
-  "version": "1.0.06",
+  "version": "1.0.08.3",
   "description": "Добродом admin",
   "main": "app.jsx",
   "homepage": "/admin/",
@@ -25,7 +25,8 @@
     "react-router": "5.2.0",
     "react-router-dom": "5.2.0",
     "react-scripts": "5.0.1",
-    "redux-localstorage-simple": "2.5.1"
+    "redux-localstorage-simple": "2.5.1",
+    "react-social-media-embed": "2.2.10"
   },
   "devDependencies": {
     "@babel/preset-typescript": "7.13.0",

@@ -1,0 +1,14 @@
+@import "../../../../assets/_variables.scss"; // variables to override above
+
+.instagram {
+    @include flex;
+    justify-content: center;
+    min-height     : 24vh;
+    align-items    : center;
+
+    .logo {
+        font-weight: 600;
+        font-size  : 7rem;
+        color: transparentize($black, .5);
+    }
+}

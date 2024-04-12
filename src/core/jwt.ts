@@ -36,13 +36,14 @@ api.interceptors.response.use((response) => {
         axios.request(config).then(response => {
           resolve(response);
         }).catch((error) => {
-          reject(error);
+          console.log(error);
           TokenStorage.clear();
         })
       });
 
     })
     .catch((error: any) => {
-      Promise.reject(error);
+      TokenStorage.clear();
+      console.log(error);
     });
 });
