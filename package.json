@@ -13,6 +13,7 @@
     "@fortawesome/react-fontawesome": "0.1.14",
     "@reduxjs/toolkit": "^1.9.5",
     "antd": "5.4.7",
+    "sunflower-antd": "1.0.0-beta.3",
     "axios": "^1.6.8",
     "i18next": "19.9.2",
     "lodash.clonedeep": "4.5.0",

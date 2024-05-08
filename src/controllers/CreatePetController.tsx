@@ -1,19 +1,21 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import style from './pets.module.scss';
+import { useStepsForm } from 'sunflower-antd';
 import { Trans, useTranslation } from 'react-i18next';
 import { HomeOutlined, UploadOutlined } from '@ant-design/icons';
 import { RouteComponentProps } from 'react-router';
 import { hasVal } from '../core/ObjCore';
 import { IStore } from '../_helpers';
-import { IPet } from '../_reducers/pets/IPet';
+import { IPet, PetGenders, PetTypes } from '../_reducers/pets/IPet';
 import { fetchPet, patchPet } from '../_reducers/pets';
-import { Breadcrumb, Button, Form, FormInstance, Input, Steps, Upload, UploadFile, UploadProps } from 'antd';
+import { Breadcrumb, Button, Form, FormInstance, Input, Select, Steps, Upload, UploadFile, UploadProps } from 'antd';
 import { Link } from 'react-router-dom';
 import i18n from '../core/Lang';
 import { Editor } from '../_components/Editor/Editor';
 import { TokenStorage } from '../core/TokenStorage';
 import { createRef, RefObject, useEffect, useState } from 'react';
+import { PetCreateForm } from '../_components/NewPetForm/NewPetForm';
 
 const UploadImg = (props: { text: string, value?: string, onChange(value: string): void; }) => {
 
@@ -58,41 +60,30 @@ interface Props extends RouteComponentProps<any> {
     isLoading: boolean;
     id: string;
     result: IPet;
-    loadData(id: string): void;
     saveData(id: string,
         beforePhotoLink?: string,
         afterPhotoLink?: string,
         mdShortBody?: string,
         mdBody?: string): void;
 }
-export class _EditPetController extends React.Component<Props, { current: number }> {
+export class _CreatePetController extends React.Component<Props, { current: number, afterImg?: string | undefined, beforeImg?: string | undefined }> {
     formRef: RefObject<FormInstance> = createRef<FormInstance>();
 
     constructor(props: Props) {
         super(props);
-        this.state = { current: 0, };
+        this.state = { current: 0, afterImg: '', beforeImg: '' };
     }
 
-    next = () => {
-        this.setState({
-            current: this.state.current + 1,
-        });
-    };
-
-    prev = () => {
-        this.setState({
-            current: this.state.current - 1,
-        });
-    };
-
     changeImgBefore = (value: string) => {
-        let { result } = this.props;
-        this.props.saveData(result.id, value, result.afterPhotoLink, result.mdShortBody, result.mdBody);
+        this.setState({
+            beforeImg: value,
+        });
     };
 
     changeImgAfter = (value: string) => {
-        let { result } = this.props;
-        this.props.saveData(result.id, result.beforePhotoLink, value, result.mdShortBody, result.mdBody);
+        this.setState({
+            afterImg: value,
+        });
     };
 
     handleSubmit = (values: any) => {
@@ -101,21 +92,6 @@ export class _EditPetController extends React.Component<Props, { current: number
     };
 
     render() {
-        const steps = [
-            {
-                title: i18n.t('CreatePet.EnterName')
-            },
-            {
-                title: i18n.t('CreatePet.SelectType')
-            },
-            {
-                title: i18n.t('CreatePet.LoadPhoto'),
-            },
-            {
-                title: i18n.t('CreatePet.EnterDescription'),
-            },
-        ];
-        const items = steps.map((item) => ({ key: item.title, title: item.title }));
         const { current } = this.state;
         return (
             <div>
@@ -137,57 +113,7 @@ export class _EditPetController extends React.Component<Props, { current: number
                     </Breadcrumb.Item>
                 </Breadcrumb>
                 <div className={style["pet-edit"]}>
-                    <Steps current={current} items={items} />
-                    <div className={style["img-wrapper"]}>
-                        <UploadImg text='Pet.UploadBeforePhotoLink'
-                            value={this.props.result?.beforePhotoLink}
-                            onChange={this.changeImgBefore} />
-                        <UploadImg text='Pet.UploadAfterPhotoLink'
-                            value={this.props.result?.afterPhotoLink}
-                            onChange={this.changeImgAfter} />
-                    </div>
-                    {this.props.isLoading || this.props.result === undefined ? <></> :
-                        <Form
-                            initialValues={this.props.result}
-                            ref={this.formRef}
-                            onFinish={this.handleSubmit}
-                        >
-                            <Form.Item
-                                label={i18n.t('Pet.Description')}
-                                name='mdShortBody'
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: i18n.t('Pet.DescriptionRequired'),
-                                    },
-                                ]}
-                            >
-                                <Input
-                                    placeholder={i18n.t("Pet.Description")}
-                                />
-                            </Form.Item>
-                            <Form.Item
-                                label={i18n.t('Pet.Body')}
-                                name='mdBody'
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: i18n.t('Pet.BodyRequired'),
-                                    },
-                                ]}
-                            >
-                                <Editor />
-                            </Form.Item>
-                            <Form.Item>
-                                <Button
-                                    type="primary"
-                                    htmlType="submit"
-                                >
-                                    <Trans>Pet.Save</Trans>
-                                </Button>
-                            </Form.Item>
-                        </Form>
-                    }
+                    <PetCreateForm></PetCreateForm>
                 </div>
             </div>
         );
@@ -195,14 +121,14 @@ export class _EditPetController extends React.Component<Props, { current: number
 }
 
 
-const EditPetController = connect((state: IStore, props: Props) => {
-    const { pet, isLoading } = state.pets;
+const CreatePetController = connect((state: IStore, props: Props) => {
+    const { isLoading } = state.pets;
     const id = props.match.params.id || hasVal('id');
 
     return {
         id: id,
         isLoading: isLoading,
-        result: pet ?? {
+        result: {
             id: id,
             name: '',
             mdBody: '',
@@ -214,12 +140,6 @@ const EditPetController = connect((state: IStore, props: Props) => {
     };
 }, (dispatch: Function) => {
     return {
-        loadData: (id: string) => {
-            dispatch(fetchPet({
-                id: id,
-                organisationId: '10000000-0000-4000-0000-000000000000',
-            }));
-        },
         saveData: (id: string,
             beforePhotoLink?: string,
             afterPhotoLink?: string,
@@ -232,26 +152,8 @@ const EditPetController = connect((state: IStore, props: Props) => {
                 mdShortBody: mdShortBody,
                 mdBody: mdBody,
             }));
-        },/*,
-        changeStatus: (id: string, value: PetState) => {
-            dispatch(changeStatus({
-                id: id,
-                value: value,
-            }));
         },
-        changeGender: (id: string, value: PetGender) => {
-            dispatch(changeGender({
-                id: id,
-                value: value,
-            }));
-        },
-        changeType: (id: string, value: PetType) => {
-            dispatch(changeType({
-                id: id,
-                value: value,
-            }));
-        },*/
     }
-})(_EditPetController);
+})(_CreatePetController);
 
-export default EditPetController;
+export default CreatePetController;
