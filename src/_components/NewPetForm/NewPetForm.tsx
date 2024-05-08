@@ -9,6 +9,7 @@ import { PetGenders, PetTypes } from '../../_reducers/pets/IPet';
 import { Editor } from '../Editor/Editor';
 import { TokenStorage } from '../../core/TokenStorage';
 import { Trans } from 'react-i18next';
+import { Config } from '../../core';
 
 const { Step } = Steps;
 
@@ -40,7 +41,7 @@ const UploadImg = (props: { text: string, value?: string, onChange(value: string
                 backgroundImage: `url(${props.value})`
             }} />
         <Upload
-            action="https://dobrodom.online/api/admin/Documents"
+            action={Config.BuildUrl("/admin/Documents")}
             onChange={onChange}
             fileList={fileList}
             headers={{
@@ -67,6 +68,7 @@ export const PetCreateForm: React.FC<PetCreateFormProps> = ({ onSubmit }) => {
         formLoading,
     } = useStepsForm({
         async submit(values) {
+            debugger;
             onSubmit(values);
         },
         total: 3,
@@ -135,34 +137,20 @@ export const PetCreateForm: React.FC<PetCreateFormProps> = ({ onSubmit }) => {
         </>,
 
         <>
-          <Form.Item
-           name='UploadBeforePhotoLink'
-           >
-               <UploadImg text='Pet.UploadBeforePhotoLink' onChange={()=>{}}                            />
-                    </Form.Item>
-                    <Form.Item
-           name='UploadBeforePhotoLink'
-           >
-               <UploadImg text='Pet.UploadAfterPhotoLink'
-               onChange={()=>{}}
-                            />
+            <Form.Item
+                name='UploadBeforePhotoLink'
+            >
+                <UploadImg text='Pet.UploadBeforePhotoLink' onChange={() => { }} />
+            </Form.Item>
+            <Form.Item
+                name='UploadBeforePhotoLink'
+            >
+                <UploadImg text='Pet.UploadAfterPhotoLink'
+                    onChange={() => { }}
+                />
 
-                    </Form.Item>
+            </Form.Item>
             <Form.Item>
-                <Button
-                    style={{ marginRight: 10 }}
-                    type="primary"
-                    loading={formLoading}
-                    onClick={() => {
-                        submit().then(result => {
-                            if (result === 'ok') {
-                                gotoStep(current + 1);
-                            }
-                        });
-                    }}
-                >
-                    Submit
-                </Button>
                 <Button onClick={() => gotoStep(current + 1)}>Next</Button>
                 <Button onClick={() => gotoStep(current - 1)}>Prev</Button>
             </Form.Item>
